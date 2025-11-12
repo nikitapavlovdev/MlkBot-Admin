@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Microsoft.EntityFrameworkCore;
+using Discord.WebSocket;
 using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using Discord.Commands;
@@ -35,7 +36,6 @@ using MlkAdmin._3_Infrastructure.Cache;
 using MlkAdmin._3_Infrastructure.DataBase;
 using MlkAdmin._4_Presentation.Extensions;
 using MlkAdmin._4_Presentation.Discord;
-using Microsoft.EntityFrameworkCore;
 using MlkAdmin._1_Domain.Interfaces.Roles;
 using MlkAdmin._2_Application.Services.Roles;
 using MlkAdmin._3_Infrastructure.Cache.Channels;
@@ -45,97 +45,96 @@ using MlkAdmin._2_Application.Services.Users;
 using MlkAdmin._3_Infrastructure.Cache.Users;
 using MlkAdmin._2_Application.Managers.Users.Stat;
 
-namespace MlkAdmin.Presentation.DI
+namespace MlkAdmin.Presentation.DI;
+
+public static class Registration
 {
-    public static class Registration
+    public static IServiceCollection AddDomainServices(this IServiceCollection services)
     {
-        public static IServiceCollection AddDomainServices(this IServiceCollection services)
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
+            typeof(Startup).Assembly,
+            typeof(UserJoinedHandler).Assembly,
+            typeof(UserLeftHandler).Assembly,
+            typeof(LogHandler).Assembly,
+            typeof(ModalSubmittedHandler).Assembly,
+            typeof(ButtonExecutedHandler).Assembly,
+            typeof(GuildAvailableHandler).Assembly,
+            typeof(UserVoiceStateUpdatedHandler).Assembly,
+            typeof(SelectMenuExecutedHandler).Assembly,
+            typeof(ReadyHandler).Assembly,
+            typeof(MessageReceivedHandler).Assembly,
+            typeof(ReactionAddedHandler).Assembly,
+            typeof(GuildMemberUpdated).Assembly, 
+            typeof(SlashCommandExecutedHandler).Assembly));
+
+        services.AddScoped<RolesManager>();
+        services.AddScoped<AutorizationManager>();
+        services.AddScoped<VoiceChannelsService>();
+        services.AddScoped<WelcomeService>();
+        services.AddScoped<EmoteManager>();
+        services.AddScoped<EmbedMessageExtension>();
+        services.AddScoped<SelectionMenuExtension>();
+        services.AddScoped<MessageComponentsExtension>();
+        services.AddScoped<ComponentsManager>();
+
+        return services;
+    }
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    {
+        services.AddScoped<IModeratorLogsSender, LogsService>();
+        services.AddScoped<IDynamicMessageCenter, DynamicMessageManager>();
+        services.AddScoped<IEmbedDtoCreator, EmbedManager>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserSyncService, UserSyncService>();
+        services.AddScoped<IVoiceChannelRepository, VoiceChannelRepository>();
+        services.AddScoped<IRoleCenter, RolesService>();
+        services.AddScoped<IChannelsService, TextChannelsService>();
+        services.AddScoped<IUserMessageRepository, UserMessageRepository>();
+        services.AddScoped<IUserVoiceSessionRepository, UserVoiceSessionRepository>();
+        services.AddScoped<VoiceChannelSyncServices>();
+        services.AddScoped<UserService>();
+        services.AddScoped<UserStatManager>();
+
+        return services;
+    }
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    {
+        services.AddSingleton<RolesCache>();
+        services.AddSingleton<EmotesCache>();
+        services.AddSingleton<EmbedDescriptionsCache>();
+        services.AddSingleton<ChannelsCache>();
+        services.AddSingleton<UsersCache>();
+        services.AddDbContext<MlkAdminDbContext>(options =>
         {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(
-                typeof(Startup).Assembly,
-                typeof(UserJoinedHandler).Assembly,
-                typeof(UserLeftHandler).Assembly,
-                typeof(LogHandler).Assembly,
-                typeof(ModalSubmittedHandler).Assembly,
-                typeof(ButtonExecutedHandler).Assembly,
-                typeof(GuildAvailableHandler).Assembly,
-                typeof(UserVoiceStateUpdatedHandler).Assembly,
-                typeof(SelectMenuExecutedHandler).Assembly,
-                typeof(ReadyHandler).Assembly,
-                typeof(MessageReceivedHandler).Assembly,
-                typeof(ReactionAddedHandler).Assembly,
-                typeof(GuildMemberUpdated).Assembly, 
-                typeof(SlashCommandExecutedHandler).Assembly));
+            string baseDir = AppContext.BaseDirectory;
+            string projectRoot = Directory.GetParent(baseDir)!.Parent!.Parent!.Parent!.FullName;
+            string dbPath = Path.Combine(projectRoot, "mlkadmin.db");
 
-            services.AddScoped<RolesManager>();
-            services.AddScoped<AutorizationManager>();
-            services.AddScoped<VoiceChannelsService>();
-            services.AddScoped<WelcomeService>();
-            services.AddScoped<EmoteManager>();
-            services.AddScoped<EmbedMessageExtension>();
-            services.AddScoped<SelectionMenuExtension>();
-            services.AddScoped<MessageComponentsExtension>();
-            services.AddScoped<ComponentsManager>();
+            options.UseSqlite($"Data Source ={dbPath}");
+        });
 
-            return services;
-        }
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-        {
-            services.AddScoped<IModeratorLogsSender, LogsService>();
-            services.AddScoped<IDynamicMessageCenter, DynamicMessageManager>();
-            services.AddScoped<IEmbedDtoCreator, EmbedManager>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserSyncService, UserSyncService>();
-            services.AddScoped<IVoiceChannelRepository, VoiceChannelRepository>();
-            services.AddScoped<IRoleCenter, RolesService>();
-            services.AddScoped<IChannelsService, TextChannelsService>();
-            services.AddScoped<IUserMessageRepository, UserMessageRepository>();
-            services.AddScoped<IUserVoiceSessionRepository, UserVoiceSessionRepository>();
-            services.AddScoped<VoiceChannelSyncServices>();
-            services.AddScoped<UserService>();
-            services.AddScoped<UserStatManager>();
+        return services;
+    }
+    public static IServiceCollection AddPresentationServices(this IServiceCollection services)
+    {
+        services.AddHostedService<DiscordBotHostService>();
 
-            return services;
-        }
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
-        {
-            services.AddSingleton<RolesCache>();
-            services.AddSingleton<EmotesCache>();
-            services.AddSingleton<EmbedDescriptionsCache>();
-            services.AddSingleton<ChannelsCache>();
-            services.AddSingleton<UsersCache>();
-            services.AddDbContext<MlkAdminDbContext>(options =>
-            {
-                string baseDir = AppContext.BaseDirectory;
-                string projectRoot = Directory.GetParent(baseDir)!.Parent!.Parent!.Parent!.FullName;
-                string dbPath = Path.Combine(projectRoot, "mlkadmin.db");
+        services.AddScoped<DiscordEventsListener>();
+        services.AddScoped<CommandService>();
+        services.AddScoped<DiscordSlashCommandAdder>();
 
-                options.UseSqlite($"Data Source ={dbPath}");
-            });
+        services.AddSingleton(new DiscordSocketClient(new() { GatewayIntents = GatewayIntents.All}));
 
-            return services;
-        }
-        public static IServiceCollection AddPresentationServices(this IServiceCollection services)
-        {
-            services.AddHostedService<DiscordBotHostService>();
+        services.AddJsonProvider<JsonDiscordChannelsMapProvider>("../../../3_Infrastructure/Configuration/DiscordChannelsMap.json");
+        services.AddJsonProvider<JsonDiscordConfigurationProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
+        services.AddJsonProvider<JsonDiscordEmotesProvider>("../../../3_Infrastructure/Configuration/DiscordEmotes.json");
+        services.AddJsonProvider<JsonDiscordPicturesProvider>("../../../3_Infrastructure/Configuration/DiscordPictures.json");
+        services.AddJsonProvider<JsonDiscordRolesProvider>("../../../3_Infrastructure/Configuration/DiscordRoles.json");
+        services.AddJsonProvider<JsonDiscordCategoriesProvider>("../../../3_Infrastructure/Configuration/DiscordCategoriesMap.json");
+        services.AddJsonProvider<JsonDiscordDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/DiscordDynamicMessages.json");
+        services.AddJsonProvider<JsonDiscordUsersLobbyProvider>("../../../3_Infrastructure/Configuration/DiscordUsersLobby.json");
+        services.AddJsonProvider<JsonDiscordRolesListProvider>("../../../3_Infrastructure/Configuration/DiscordRolesList.json");
 
-            services.AddScoped<DiscordEventsListener>();
-            services.AddScoped<CommandService>();
-            services.AddScoped<DiscordSlashCommandAdder>();
-
-            services.AddSingleton(new DiscordSocketClient(new() { GatewayIntents = GatewayIntents.All}));
-
-            services.AddJsonProvider<JsonDiscordChannelsMapProvider>("../../../3_Infrastructure/Configuration/DiscordChannelsMap.json");
-            services.AddJsonProvider<JsonDiscordConfigurationProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
-            services.AddJsonProvider<JsonDiscordEmotesProvider>("../../../3_Infrastructure/Configuration/DiscordEmotes.json");
-            services.AddJsonProvider<JsonDiscordPicturesProvider>("../../../3_Infrastructure/Configuration/DiscordPictures.json");
-            services.AddJsonProvider<JsonDiscordRolesProvider>("../../../3_Infrastructure/Configuration/DiscordRoles.json");
-            services.AddJsonProvider<JsonDiscordCategoriesProvider>("../../../3_Infrastructure/Configuration/DiscordCategoriesMap.json");
-            services.AddJsonProvider<JsonDiscordDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/DiscordDynamicMessages.json");
-            services.AddJsonProvider<JsonDiscordUsersLobbyProvider>("../../../3_Infrastructure/Configuration/DiscordUsersLobby.json");
-            services.AddJsonProvider<JsonDiscordRolesListProvider>("../../../3_Infrastructure/Configuration/DiscordRolesList.json");
-
-            return services;
-        }
+        return services;
     }
 }

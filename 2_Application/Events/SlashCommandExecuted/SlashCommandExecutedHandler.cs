@@ -27,7 +27,6 @@ namespace MlkAdmin._2_Application.Events.SlashCommandExecuted
 						embed: embedMessageExtension.CreateEmbed(new EmbedDto() 
 
                         {
-							Title = "Кок-блок",
                             Description = $"Команды бота можно вызывать только в канале {mapProvider.BotCommandChannelHttps}.",
                             Color = Discord.Color.Red
                         }),
@@ -79,9 +78,8 @@ namespace MlkAdmin._2_Application.Events.SlashCommandExecuted
                         await notification.SocketSlashCommand.RespondAsync(
 							embed: embedMessageExtension.CreateEmbed(new EmbedDto()
 							{
-								Title = "Технические шоколадки",
 								Description = "Команда пока что в разработке",
-                                Color = Discord.Color.Default
+                                Color = Discord.Color.Red
                             }),
 							ephemeral: true);
                         break;

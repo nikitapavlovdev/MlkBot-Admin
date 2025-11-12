@@ -1,30 +1,31 @@
 ﻿using Serilog;
 using Microsoft.Extensions.Hosting;
 using MlkAdmin.Presentation.DI;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace MlkAdmin.Presentation
+namespace MlkAdmin.Presentation;
+
+class Startup
 {
-    class Startup
+    public static async Task Main()
     {
-        public static async Task Main()
-        {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
-                .CreateLogger();
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
 
-            IHost host = Host.CreateDefaultBuilder()
-                .UseSerilog()
-                .ConfigureServices((services) =>
-                {
-                    services.AddDomainServices();
-                    services.AddApplicationServices();
-                    services.AddInfrastructureServices();
-                    services.AddPresentationServices();
-                })
-                .Build();
+        IHost host = Host.CreateDefaultBuilder()
+            .UseSerilog()
+            .ConfigureServices((services) =>
+            {
+                services.AddDomainServices();
+                services.AddApplicationServices();
+                services.AddInfrastructureServices();
+                services.AddPresentationServices();
+            })
+            .Build();
 
-            await host.RunAsync();
-        }
+        await host.RunAsync();
     }
 }
