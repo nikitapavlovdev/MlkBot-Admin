@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using Discord.WebSocket;
+using MediatR;
 using Microsoft.Extensions.Logging;
+using MlkAdmin._2_Application.Commands.Autorize;
 using MlkAdmin._2_Application.Commands.LobbyName;
 using MlkAdmin._2_Application.Commands.UserStat;
 using MlkAdmin._2_Application.DTOs.Discord.Embed;
@@ -73,6 +75,21 @@ namespace MlkAdmin._2_Application.Events.SlashCommandExecuted
 						}), ephemeral: true);
 
 						break;
+
+					case "autorize":
+
+						AuResponse response = await mediator.Send(new AutorizeCommand()
+						{
+							User = notification.SocketSlashCommand.Data.Options.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser
+						}, new());
+
+						await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new()
+						{
+							Description = response.Message,
+							Color = new Discord.Color(87, 206, 255)
+						}), ephemeral: true);
+
+						break; 
 
                     default:
                         await notification.SocketSlashCommand.RespondAsync(
