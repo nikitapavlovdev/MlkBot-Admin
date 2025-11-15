@@ -1,5 +1,5 @@
-﻿using Discord.WebSocket;
-using MediatR;
+﻿using MediatR;
+using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._2_Application.Commands.Autorize;
 using MlkAdmin._2_Application.Commands.LobbyName;
@@ -9,7 +9,6 @@ using MlkAdmin._2_Application.DTOs.Discord.Responses;
 using MlkAdmin._2_Application.DTOs.Responses;
 using MlkAdmin._3_Infrastructure.Discord.Extensions;
 using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
-using System.Net.Http.Headers;
 
 namespace MlkAdmin._2_Application.Events.SlashCommandExecuted
 {
@@ -56,16 +55,36 @@ namespace MlkAdmin._2_Application.Events.SlashCommandExecuted
 							ephemeral: false);
                         break;
 
-					case "statistic":
+					case "user_stat":
+
+						ulong targetUserId = notification.SocketSlashCommand.User.Id;
+						string targetUserName = notification.SocketSlashCommand.User.GlobalName;
+
+						if(notification.SocketSlashCommand.Data.Options.Any(x => x.Name == "user"))
+						{
+                            if (notification.SocketSlashCommand.Data.Options.FirstOrDefault(x => x.Name == "user").Value is not SocketGuildUser optionUser || optionUser.IsBot)
+                            {
+                                await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new()
+                                {
+                                    Description = "Пользователь не найден, либо пользователь бот",
+                                    Color = Discord.Color.Gold
+                                }), ephemeral: true);
+
+                                return;
+                            }
+
+                            targetUserId = optionUser.Id;
+							targetUserName = optionUser.GlobalName;
+						}
 
 						UserStatResponse userStatResponse = await mediator.Send(new UserStatCommand()
 						{
-							UserId = notification.SocketSlashCommand.User.Id
+							UserId = targetUserId,
 						}, new());
 
 						await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new EmbedDto()
 						{
-							Description = $"Общая статистика {notification.SocketSlashCommand.User.GlobalName}\n" +
+							Description = $"Общая статистика {targetUserName}\n" +
 							$"> Сообщений отправлено: **{(userStatResponse.MessageCount == -1 ? "-" : userStatResponse.MessageCount)}**\n" +
 							$"> Времени в голосовом канале: **{(userStatResponse.TotalSeconds != -1 ? userStatResponse.TotalSeconds / 3600 : 0)}h " +
 							$"{(userStatResponse.TotalSeconds != -1 ? userStatResponse.TotalSeconds % 3600 / 60 : 0)}m " +
@@ -76,7 +95,18 @@ namespace MlkAdmin._2_Application.Events.SlashCommandExecuted
 
 						break;
 
-					case "autorize":
+					case "authorize":
+						
+						if(notification.SocketSlashCommand.User is SocketGuildUser user && !user.GuildPermissions.Administrator)
+						{
+							await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new()
+							{
+								Description = "Данную команду могут вызывать только администраторы сервера",
+								Color = Discord.Color.Red
+							}), ephemeral: true);
+
+							return;
+						}
 
 						AuResponse response = await mediator.Send(new AutorizeCommand()
 						{

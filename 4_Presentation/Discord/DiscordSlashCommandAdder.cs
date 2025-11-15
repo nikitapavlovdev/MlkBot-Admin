@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 
 namespace MlkAdmin._4_Presentation.Discord;
-
 public class DiscordSlashCommandAdder(
     ILogger<DiscordSlashCommandAdder> logger, 
     DiscordSocketClient client,
@@ -47,15 +46,16 @@ public class DiscordSlashCommandAdder(
     private SlashCommandProperties? GetUserStatistic()
     {
         return new SlashCommandBuilder()
-            .WithName("statistic")
-            .WithDescription("Получить мою статистику на сервере")
+            .WithName("user_stat")
+            .WithDescription("Получить статистику пользователя на сервере")
+            .AddOption("user", ApplicationCommandOptionType.User, "Пользователь", isRequired: false)
             .Build();
     }
 
     private SlashCommandProperties? AutorizeUser()
     {
         return new SlashCommandBuilder()
-            .WithName("autorize")
+            .WithName("authorize")
             .WithDescription("Авторизовать пользователя")
             .AddOption("user", ApplicationCommandOptionType.User, "Пользователь", isRequired: true)
             .Build();

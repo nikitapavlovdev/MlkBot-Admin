@@ -28,7 +28,8 @@ public class AutorizeCommandHandler(ILogger<AutorizeCommandHandler> logger, Auto
 			{
 				IsSuccess = false,
 				Error = ex.Message,
-				Status = "Ошибка"
+				Status = "Ошибка",
+				Message = "Ошибка при попытке авторизовать пользователя"
 			};
 		}
     }
