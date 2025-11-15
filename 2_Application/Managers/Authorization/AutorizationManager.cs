@@ -6,48 +6,47 @@ using MlkAdmin._2_Application.DTOs.Discord.Messages;
 using MlkAdmin._1_Domain.Interfaces.Roles;
 using Discord.WebSocket;
 
-namespace MlkAdmin._2_Application.Managers.UserManagers
+namespace MlkAdmin._2_Application.Managers.UserManagers;
+
+public class AutorizationManager( 
+    ILogger<AutorizationManager> logger,
+    IRoleCenter roleCenter,
+    IModeratorLogsSender moderatorLogsSender,
+    JsonDiscordRolesProvider jsonDiscordRolesProvider,
+    JsonDiscordChannelsMapProvider jsonChannelsMapProvider)
 {
-    public class AutorizationManager( 
-        ILogger<AutorizationManager> logger,
-        IRoleCenter roleCenter,
-        IModeratorLogsSender moderatorLogsSender,
-        JsonDiscordRolesProvider jsonDiscordRolesProvider,
-        JsonDiscordChannelsMapProvider jsonChannelsMapProvider)
+    public async Task AuthorizeUser(IUser user)
     {
-        public async Task AuthorizeUser(IUser user)
+        try
         {
-            try
+            if (user is not SocketGuildUser guildUser)
             {
-                if (user is not SocketGuildUser guildUser)
+                throw new Exception("Пользователь не является участником сервера");
+            }
+
+            await Task.WhenAll(
+
+                roleCenter.RemoveRoleFromUserAsync(guildUser.Id,
+                jsonDiscordRolesProvider.RootDiscordRoles.GeneralRole.Autorization.NotRegistered.Id),
+
+                roleCenter.AddRolesToUserAsync(guildUser.Id,
+                [
+                    jsonDiscordRolesProvider.RootDiscordRoles.GeneralRole.Autorization.MalenkiyMember.Id,
+                    jsonDiscordRolesProvider.RootDiscordRoles.GeneralRole.Categories.Gamer.Id
+                ]),
+
+                moderatorLogsSender.SendLogMessageAsync(new LogMessageDto()
                 {
-                    throw new Exception("Пользователь не является участником сервера");
-                }
-
-                await Task.WhenAll(
-
-                    roleCenter.RemoveRoleFromUserAsync(guildUser.Id,
-                    jsonDiscordRolesProvider.RootDiscordRoles.GeneralRole.Autorization.NotRegistered.Id),
-
-                    roleCenter.AddRolesToUserAsync(guildUser.Id,
-                    [
-                        jsonDiscordRolesProvider.RootDiscordRoles.GeneralRole.Autorization.MalenkiyMember.Id,
-                        jsonDiscordRolesProvider.RootDiscordRoles.GeneralRole.Categories.Gamer.Id
-                    ]),
-
-                    moderatorLogsSender.SendLogMessageAsync(new LogMessageDto()
-                    {
-                        ChannelId = jsonChannelsMapProvider.LogsChannelId,
-                        Description = $"> Пользователь {guildUser.Mention} завершил верификацию.",
-                        UserId = guildUser.Id,
-                        Title = "Успешная верификация"
-                    })
-                );
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Ошибка при авторизации пользователя");
-            }
+                    ChannelId = jsonChannelsMapProvider.LogsChannelId,
+                    Description = $"> Пользователь {guildUser.Mention} завершил верификацию.",
+                    UserId = guildUser.Id,
+                    Title = "Успешная верификация"
+                })
+            );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Ошибка при авторизации пользователя");
         }
     }
 }
