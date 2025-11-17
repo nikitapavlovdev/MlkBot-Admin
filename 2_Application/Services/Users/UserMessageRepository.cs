@@ -29,7 +29,11 @@ namespace MlkAdmin._2_Application.Services.Users
                     };
                 }
 
-                existing.Count += stat.Count;
+                existing.TotalMessageCount += stat.TotalMessageCount;
+                existing.PicturesAmount += stat.PicturesAmount;
+                existing.CommandsAmount += stat.CommandsAmount;
+                existing.BadWordsAmount += stat.BadWordsAmount;
+                existing.GifsAmount += stat.GifsAmount;
                 existing.LastUpdate = stat.LastUpdate;
 
                 dbContext.Messages.Update(existing);
@@ -86,7 +90,7 @@ namespace MlkAdmin._2_Application.Services.Users
                 return -1;
             }
 
-            return stat.Count;
+            return stat.TotalMessageCount;
         }
     }
 }
