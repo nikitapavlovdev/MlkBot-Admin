@@ -10,49 +10,18 @@ namespace MlkAdmin._2_Application.Events.MessageReceived
 {
     public class MessageReceivedHandler(
         ILogger<MessageReceivedHandler> logger,
-        JsonDiscordRolesProvider jsonDiscordRolesProvider,
         UserStatManager userStatManager) : INotificationHandler<MessageReceived>
     {
         public async Task Handle(MessageReceived notification, CancellationToken cancellationToken)
         {
             try
             {
-                if (notification.SocketMessage.Author.IsBot) return;
-                if (notification.SocketMessage is not SocketUserMessage socketUserMessage) return;
+                if (notification.SocketMessage.Author.IsBot || notification.SocketMessage is not SocketUserMessage socketUserMessage) 
+                    return;
 
+                SocketGuildUser? author = notification.SocketMessage.Author as SocketGuildUser;
 
-                SocketGuildUser? socketGuildUser = notification.SocketMessage.Author as SocketGuildUser;
-
-                await userStatManager.IncrementMessageCountAsync(socketGuildUser.Id);
-
-                int argPos = 0;
-
-                if (socketGuildUser.Roles.Any(x => x.Id == jsonDiscordRolesProvider.AdminRoleId) || 
-                    socketGuildUser.Roles.Any(x => x.Id == jsonDiscordRolesProvider.HeadRoleId))
-                {
-                    if (!socketUserMessage.HasStringPrefix("$adm:", ref argPos)) return;
-
-                    string[] command = notification.SocketMessage.Content[argPos..].Split(" ");
-
-                    switch (command[0])
-                    {
-                        case "rm":
-
-                            if (socketUserMessage.Channel is not ITextChannel textChannel)
-                            {
-                                return;
-                            }
-
-                            IEnumerable<IMessage> messages = await textChannel.GetMessagesAsync(limit: 100).FlattenAsync();
-                            await textChannel.DeleteMessagesAsync(messages);
-
-                            break;
-
-                        default:
-
-                            break;
-                    }
-                }
+                await userStatManager.UpdateMessageStatAsync(author.Id, notification.SocketMessage);
             }
             catch (Exception ex)
             {

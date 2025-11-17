@@ -15,7 +15,7 @@ namespace MlkAdmin.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
 
             modelBuilder.Entity("MlkAdmin._1_Domain.Entities.TextChannel", b =>
                 {
@@ -75,11 +75,23 @@ namespace MlkAdmin.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Count")
+                    b.Property<int>("BadWordsAmount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CommandsAmount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GifsAmount")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("LastUpdate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("PicturesAmount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TotalMessageCount")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("UserId");
 

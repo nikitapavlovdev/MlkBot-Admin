@@ -21,7 +21,7 @@ public class DiscordSlashCommandAdder(
 
             SlashGuildCommands.Add(AddLobbyNameCommand());
             SlashGuildCommands.Add(GetUserStatistic());
-            SlashGuildCommands.Add(AutorizeUser());
+            SlashGuildCommands.Add(AuthorizeUser());
 
             foreach (SlashCommandProperties? command in SlashGuildCommands)
             {
@@ -52,7 +52,7 @@ public class DiscordSlashCommandAdder(
             .Build();
     }
 
-    private SlashCommandProperties? AutorizeUser()
+    private SlashCommandProperties? AuthorizeUser()
     {
         return new SlashCommandBuilder()
             .WithName("authorize")

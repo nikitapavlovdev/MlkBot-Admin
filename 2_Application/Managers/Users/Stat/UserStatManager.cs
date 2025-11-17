@@ -4,56 +4,85 @@ using MlkAdmin._1_Domain.Entities;
 using MlkAdmin._1_Domain.Interfaces.Users;
 using Discord.WebSocket;
 
-namespace MlkAdmin._2_Application.Managers.Users.Stat
+namespace MlkAdmin._2_Application.Managers.Users.Stat;
+
+public class UserStatManager(
+    ILogger<UserStatManager> logger, 
+    IUserMessageRepository userMessageRepository,
+    IUserVoiceSessionRepository userVoiceSessionRepository)
 {
-    public class UserStatManager(
-        ILogger<UserStatManager> logger, 
-        IUserMessageRepository userMessageRepository,
-        IUserVoiceSessionRepository userVoiceSessionRepository)
+    public async Task UpdateMessageStatAsync(ulong userId, SocketMessage? message)
     {
-        public async Task IncrementMessageCountAsync(ulong userId)
+        try
         {
-            try
+            UserMessagesStat messageStat = new()
             {
-                await userMessageRepository.AddOrUpdateAsync(new UserMessagesStat()
+                TotalMessageCount = 1,
+                LastUpdate = DateTime.UtcNow,
+                UserId = userId
+            };
+
+            ModifyStats(message, messageStat);
+
+            await userMessageRepository.AddOrUpdateAsync(messageStat);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Ошибка при попытке увеличить счетчик пользователя");
+        }
+    }
+
+    public async Task TrackUserVoiceSessionsAsync(ulong userId, SocketVoiceState newState, SocketVoiceState oldState)
+    {
+        try
+        {
+            if (oldState.VoiceChannel != null && newState.VoiceChannel == null)
+            {
+                await userVoiceSessionRepository.AddOrUpdateAsync(new UserVoiceSession()
                 {
                     UserId = userId,
-                    Count = 1,
-                    LastUpdate = DateTime.UtcNow
+                    VoiceStarting = null
                 });
             }
-            catch (Exception ex)
+
+            if (oldState.VoiceChannel == null && newState.VoiceChannel != null)
             {
-                logger.LogError(ex, "Ошибка при попытке увеличить счетчик пользователя");
+                await userVoiceSessionRepository.AddOrUpdateAsync(new UserVoiceSession()
+                {
+                    UserId = userId,
+                    VoiceStarting = DateTime.UtcNow
+                });
             }
         }
-
-        public async Task TrackUserVoiceSessionsAsync(ulong userId, SocketVoiceState newState, SocketVoiceState oldState)
+        catch (Exception ex)
         {
-            try
-            {
-                if (oldState.VoiceChannel != null && newState.VoiceChannel == null)
-                {
-                    await userVoiceSessionRepository.AddOrUpdateAsync(new UserVoiceSession()
-                    {
-                        UserId = userId,
-                        VoiceStarting = null
-                    });
-                }
+            logger.LogError(ex, "Ошибка при попытке отследить голосовую сессию");
+        }
+    }
 
-                if (oldState.VoiceChannel == null && newState.VoiceChannel != null)
+    private void ModifyStats(SocketMessage message, UserMessagesStat messagesStat)
+    {
+        try
+        {
+            if (message.Attachments.Count > 0)
+            {
+                foreach (var attachment in message.Attachments)
                 {
-                    await userVoiceSessionRepository.AddOrUpdateAsync(new UserVoiceSession()
+                    if (attachment.Filename.EndsWith(".gif"))
                     {
-                        UserId = userId,
-                        VoiceStarting = DateTime.UtcNow
-                    });
+                        messagesStat.GifsAmount += 1;
+                    }
+
+                    if (attachment.Filename.EndsWith(".png") || attachment.Filename.EndsWith(".jpg"))
+                    {
+                        messagesStat.PicturesAmount += 1;
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Ошибка при попытке отследить голосовую сессию");
-            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Ошибка при попытке проанализировать входящее сообщение");
         }
     }
 }
