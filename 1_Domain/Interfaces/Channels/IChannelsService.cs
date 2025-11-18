@@ -1,9 +1,8 @@
 ﻿using Discord.WebSocket;
 
-namespace MlkAdmin._1_Domain.Interfaces.Channels
+namespace MlkAdmin._1_Domain.Interfaces.Channels;
+
+public interface IChannelsService
 {
-    public interface IChannelsService
-    {
-        public Task<SocketTextChannel?> GetTextChannelAsync(ulong channelId);
-    }
+    public Task<SocketTextChannel?> GetTextChannelAsync(ulong channelId);
 }

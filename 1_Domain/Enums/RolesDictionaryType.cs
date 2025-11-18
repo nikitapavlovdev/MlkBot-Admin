@@ -1,11 +1,10 @@
-﻿namespace MlkAdmin._1_Domain.Enums
+﻿namespace MlkAdmin._1_Domain.Enums;
+
+public enum RolesDictionaryType
 {
-    public enum RolesDictionaryType
-    {
-        Guild,
-        Hierarchy,
-        Category,
-        Unique,
-        SwitchColor
-    }
+    Guild,
+    Hierarchy,
+    Category,
+    Unique,
+    SwitchColor
 }

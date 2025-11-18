@@ -5,29 +5,28 @@ using MlkAdmin._1_Domain.Interfaces.Messages;
 using MlkAdmin._2_Application.DTOs.Discord.Messages;
 using MlkAdmin._3_Infrastructure.Discord.Extensions;
 
-namespace MlkAdmin._2_Application.Services.Messages
-{
-    public class LogsService(
-        ILogger<LogsService> logger,
-        IChannelsService channelsService,
-        EmbedMessageExtension embedMessageExtension) : IModeratorLogsSender
-    {
-        public async Task SendLogMessageAsync(LogMessageDto logMessageDto)
-        {
-            try
-            {
-                SocketTextChannel? logsChannel = await channelsService.GetTextChannelAsync(logMessageDto.ChannelId);
+namespace MlkAdmin._2_Application.Services.Messages;
 
-                await logsChannel.SendMessageAsync(embed: embedMessageExtension.CreateEmbed(new()
-                {
-                    Title = logMessageDto.Title,
-                    Description = logMessageDto.Description,
-                }));
-            }
-            catch (Exception ex)
+public class LogsService(
+    ILogger<LogsService> logger,
+    IChannelsService channelsService,
+    EmbedMessageExtension embedMessageExtension) : IModeratorLogsSender
+{
+    public async Task SendLogMessageAsync(LogMessageDto logMessageDto)
+    {
+        try
+        {
+            SocketTextChannel? logsChannel = await channelsService.GetTextChannelAsync(logMessageDto.ChannelId);
+
+            await logsChannel.SendMessageAsync(embed: embedMessageExtension.CreateEmbed(new()
             {
-                logger.LogError(ex, "Ошибка при отправке лога");
-            }
+                Title = logMessageDto.Title,
+                Description = logMessageDto.Description,
+            }));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Ошибка при отправке лога");
         }
     }
 }

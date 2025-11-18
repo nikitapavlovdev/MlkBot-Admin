@@ -1,10 +1,9 @@
-﻿namespace MlkAdmin._1_Domain.Enums
+﻿namespace MlkAdmin._1_Domain.Enums;
+
+public enum RoleType
 {
-    public enum RoleType
-    {
-        Server,
-        Category,
-        Unique,
-        Color
-    }
+    Server,
+    Category,
+    Unique,
+    Color
 }

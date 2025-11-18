@@ -1,17 +1,16 @@
 ﻿using Discord;
 
-namespace MlkAdmin._3_Infrastructure.Discord.Extensions
+namespace MlkAdmin._3_Infrastructure.Discord.Extensions;
+
+public class MessageComponentsExtension
 {
-    public class MessageComponentsExtension
+    public static MessageComponent GetServerHubLinkButton(string serverhubChannelLink)
     {
-        public static MessageComponent GetServerHubLinkButton(string serverhubChannelLink)
-        {
-            return new ComponentBuilder()
-                .WithButton(new ButtonBuilder()
-                    .WithStyle(ButtonStyle.Link)
-                    .WithLabel("Пройти верификацию")
-                    .WithUrl(serverhubChannelLink))
-                .Build();
-        }
+        return new ComponentBuilder()
+            .WithButton(new ButtonBuilder()
+                .WithStyle(ButtonStyle.Link)
+                .WithLabel("Пройти верификацию")
+                .WithUrl(serverhubChannelLink))
+            .Build();
     }
 }

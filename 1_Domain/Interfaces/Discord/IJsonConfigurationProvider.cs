@@ -1,7 +1,6 @@
-﻿namespace MlkAdmin._1_Domain.Interfaces.Discord
+﻿namespace MlkAdmin._1_Domain.Interfaces.Discord;
+
+public interface IJsonConfigurationProvider
 {
-    public interface IJsonConfigurationProvider
-    {
-        void Load();
-    }
+    void Load();
 }

@@ -1,10 +1,9 @@
-﻿namespace MlkAdmin._1_Domain.Enums
+﻿namespace MlkAdmin._1_Domain.Enums;
+
+public enum DynamicMessageType
 {
-    public enum DynamicMessageType
-    {
-        Roles,
-        NameColor,
-        Rules,
-        Authorization,
-    }
+    Roles,
+    NameColor,
+    Rules,
+    Authorization,
 }

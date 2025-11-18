@@ -1,10 +1,9 @@
 ﻿using MlkAdmin._1_Domain.Entities;
 
-namespace MlkAdmin._1_Domain.Interfaces.Channels
+namespace MlkAdmin._1_Domain.Interfaces.Channels;
+
+public interface ITextChannelsRepository
 {
-    public interface ITextChannelsRepository
-    {
-        Task UpsertDbTextChannelAsync(TextChannel channel);
-        Task RemoveDbTextChannelAsync(ulong id);
-    }
+    Task UpsertDbTextChannelAsync(TextChannel channel);
+    Task RemoveDbTextChannelAsync(ulong id);
 }

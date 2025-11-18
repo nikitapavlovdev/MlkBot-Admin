@@ -1,28 +1,27 @@
 ﻿using System.Text;
 
-namespace MlkAdmin._1_Domain.Utilities
+namespace MlkAdmin._1_Domain.Utilities;
+
+public static class ExtensionMethods
 {
-    public static class ExtensionMethods
+    public static ulong ConvertId(this string? strId)
     {
-        public static ulong ConvertId(this string? strId)
+
+        if (string.IsNullOrEmpty(strId) || !ulong.TryParse(strId, out ulong id))
         {
-
-            if (string.IsNullOrEmpty(strId) || !ulong.TryParse(strId, out ulong id))
-            {
-                return 0;
-            }
-
-            return id;
+            return 0;
         }
 
-        public static void CompareChange(this StringBuilder stringBuilder, string fieldName, string? oldValue, string? newValue)
+        return id;
+    }
+
+    public static void CompareChange(this StringBuilder stringBuilder, string fieldName, string? oldValue, string? newValue)
+    {
+        if(oldValue != newValue)
         {
-            if(oldValue != newValue)
-            {
-                stringBuilder.AppendLine($"**{fieldName} изменен:**");
-                stringBuilder.AppendLine($"> **Старое:** {oldValue ?? "-"}");
-                stringBuilder.AppendLine($"> **Новое: ** {newValue ?? "-"}");
-            }
+            stringBuilder.AppendLine($"**{fieldName} изменен:**");
+            stringBuilder.AppendLine($"> **Старое:** {oldValue ?? "-"}");
+            stringBuilder.AppendLine($"> **Новое: ** {newValue ?? "-"}");
         }
-    } 
-}
+    }
+} 

@@ -3,31 +3,30 @@ using Newtonsoft.Json;
 using MlkAdmin._3_Infrastructure.JsonModels.Emotes;
 using Microsoft.Extensions.Logging;
 
-namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider
+namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider;
+
+public class JsonDiscordEmotesProvider : IJsonConfigurationProvider
 {
-    public class JsonDiscordEmotesProvider : IJsonConfigurationProvider
+    private readonly ILogger<JsonDiscordEmotesProvider> logger;
+    private readonly string filePath;
+    private RootDiscordEmotes? RootDiscordEmotes { get; set; } 
+
+    public JsonDiscordEmotesProvider(string filePath, ILogger<JsonDiscordEmotesProvider> logger)
     {
-        private readonly ILogger<JsonDiscordEmotesProvider> logger;
-        private readonly string filePath;
-        private RootDiscordEmotes? RootDiscordEmotes { get; set; } 
+        this.logger = logger;
+        this.filePath = filePath;
+        Load();
+    }
 
-        public JsonDiscordEmotesProvider(string filePath, ILogger<JsonDiscordEmotesProvider> logger)
+    public void Load()
+    {
+        try
         {
-            this.logger = logger;
-            this.filePath = filePath;
-            Load();
+            RootDiscordEmotes = JsonConvert.DeserializeObject<RootDiscordEmotes>(File.ReadAllText(filePath));
         }
-
-        public void Load()
+        catch (Exception ex)
         {
-            try
-            {
-                RootDiscordEmotes = JsonConvert.DeserializeObject<RootDiscordEmotes>(File.ReadAllText(filePath));
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
-            }
+            logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace MlkAdmin._1_Domain.Interfaces.Messages
+﻿namespace MlkAdmin._1_Domain.Interfaces.Messages;
+
+public interface IDynamicMessageCenter
 {
-    public interface IDynamicMessageCenter
-    {
-        Task UpdateAllDM(ulong guildId);
-    }
+    Task UpdateAllDM(ulong guildId);
 }

@@ -9,38 +9,37 @@ using MlkAdmin._1_Domain.Interfaces.Users;
 using MlkAdmin._3_Infrastructure.Cache.Channels;
 using MlkAdmin._3_Infrastructure.Cache.Users;
 
-namespace MlkAdmin._2_Application.Events.GuildAvailable
-{   
-    class GuildAvailableHandler(
-        ILogger<GuildAvailableHandler> logger,
-        IDynamicMessageCenter dynamicMessageCenter,
-        IUserSyncService userSyncService,
-        VoiceChannelsService voiceChannelsManager,
-        VoiceChannelSyncServices voiceChannelSyncServices,
-        RolesManager rolesManager,
-        EmoteManager emotesManager,
-        ChannelsCache channelsCache,
-        UsersCache usersCache) : INotificationHandler<GuildAvailable>
+namespace MlkAdmin._2_Application.Events.GuildAvailable;
+
+class GuildAvailableHandler(
+    ILogger<GuildAvailableHandler> logger,
+    IDynamicMessageCenter dynamicMessageCenter,
+    IUserSyncService userSyncService,
+    VoiceChannelsService voiceChannelsManager,
+    VoiceChannelSyncServices voiceChannelSyncServices,
+    RolesManager rolesManager,
+    EmoteManager emotesManager,
+    ChannelsCache channelsCache,
+    UsersCache usersCache) : INotificationHandler<GuildAvailable>
+{
+    public async Task Handle(GuildAvailable notification, CancellationToken cancellationToken)
     {
-        public async Task Handle(GuildAvailable notification, CancellationToken cancellationToken)
+        try
         {
-            try
-            {
-                await Task.WhenAll(
-                    voiceChannelsManager.UpsertGuildVoiceChannelsAsync(notification.SocketGuild),
-                    rolesManager.GuildRolesInitialization(notification.SocketGuild),
-                    emotesManager.EmotesInitialization(notification.SocketGuild),
-                    dynamicMessageCenter.UpdateAllDM(notification.SocketGuild.Id),
-                    userSyncService.SyncUsersAsync(notification.SocketGuild.Id),
-                    voiceChannelSyncServices.SyncVoiceChannelsDbWithGuildAsync(notification.SocketGuild),
-                    channelsCache.FillChannelsAsync(notification.SocketGuild.Channels),
-                    usersCache.FillUsersAsync(notification.SocketGuild)
-                );
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
-            }
+            await Task.WhenAll(
+                voiceChannelsManager.UpsertGuildVoiceChannelsAsync(notification.SocketGuild),
+                rolesManager.GuildRolesInitialization(notification.SocketGuild),
+                emotesManager.EmotesInitialization(notification.SocketGuild),
+                dynamicMessageCenter.UpdateAllDM(notification.SocketGuild.Id),
+                userSyncService.SyncUsersAsync(notification.SocketGuild.Id),
+                voiceChannelSyncServices.SyncVoiceChannelsDbWithGuildAsync(notification.SocketGuild),
+                channelsCache.FillChannelsAsync(notification.SocketGuild.Channels),
+                usersCache.FillUsersAsync(notification.SocketGuild)
+            );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
         }
     }
 }

@@ -4,50 +4,49 @@ using MlkAdmin._1_Domain.Entities;
 using MlkAdmin._1_Domain.Interfaces.Channels;
 using MlkAdmin._3_Infrastructure.DataBase;
 
-namespace MlkAdmin._2_Application.Managers.Channels.VoiceChannels
+namespace MlkAdmin._2_Application.Managers.Channels.VoiceChannels;
+
+public class TextChannelsRepository(
+    ILogger<TextChannelsRepository> logger,
+    MlkAdminDbContext mlkAdminDbContext) : ITextChannelsRepository
 {
-    public class TextChannelsRepository(
-        ILogger<TextChannelsRepository> logger,
-        MlkAdminDbContext mlkAdminDbContext) : ITextChannelsRepository
+    public async Task UpsertDbTextChannelAsync(TextChannel channel)
     {
-        public async Task UpsertDbTextChannelAsync(TextChannel channel)
+        try
         {
-            try
-            {
-                TextChannel? dbChannel = await mlkAdminDbContext.Texts.FirstOrDefaultAsync(x => x.Id == channel.Id);
+            TextChannel? dbChannel = await mlkAdminDbContext.Texts.FirstOrDefaultAsync(x => x.Id == channel.Id);
 
-                if (dbChannel == null)
-                {
-                    await mlkAdminDbContext.Texts.AddAsync(channel);
-                }
-                else
-                {
-                    mlkAdminDbContext.Entry(dbChannel).CurrentValues.SetValues(channel);
-                }
-
-                await mlkAdminDbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
+            if (dbChannel == null)
             {
-                logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
+                await mlkAdminDbContext.Texts.AddAsync(channel);
             }
+            else
+            {
+                mlkAdminDbContext.Entry(dbChannel).CurrentValues.SetValues(channel);
+            }
+
+            await mlkAdminDbContext.SaveChangesAsync();
         }
-
-        public async Task RemoveDbTextChannelAsync(ulong id)
+        catch (Exception ex)
         {
-            try
-            {
-                TextChannel? dbChannel = await mlkAdminDbContext.Texts.FirstOrDefaultAsync(x => x.Id == id);
+            logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
+        }
+    }
 
-                if (dbChannel == null) { return; }
+    public async Task RemoveDbTextChannelAsync(ulong id)
+    {
+        try
+        {
+            TextChannel? dbChannel = await mlkAdminDbContext.Texts.FirstOrDefaultAsync(x => x.Id == id);
 
-                mlkAdminDbContext.Texts.Remove(dbChannel);
-                await mlkAdminDbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
-            }
+            if (dbChannel == null) { return; }
+
+            mlkAdminDbContext.Texts.Remove(dbChannel);
+            await mlkAdminDbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
         }
     }
 }

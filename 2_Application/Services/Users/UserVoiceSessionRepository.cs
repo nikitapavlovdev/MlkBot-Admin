@@ -5,58 +5,46 @@ using MlkAdmin._1_Domain.Interfaces.Users;
 using MlkAdmin._2_Application.DTOs.Discord.Responses;
 using MlkAdmin._3_Infrastructure.DataBase;
 
-namespace MlkAdmin._2_Application.Services.Users
+namespace MlkAdmin._2_Application.Services.Users;
+
+public class UserVoiceSessionRepository(
+    ILogger<UserVoiceSessionRepository> logger,
+    MlkAdminDbContext dbContext) : IUserVoiceSessionRepository
 {
-    public class UserVoiceSessionRepository(
-        ILogger<UserVoiceSessionRepository> logger,
-        MlkAdminDbContext dbContext) : IUserVoiceSessionRepository
+    public async Task<DefaultResponse> AddOrUpdateAsync(UserVoiceSession voiceSession)
     {
-        public async Task<DefaultResponse> AddOrUpdateAsync(UserVoiceSession voiceSession)
+        try
         {
-            try
+            UserVoiceSession? session = await dbContext.VoiceSession.FindAsync(voiceSession.UserId);
+
+            if (session is null)
             {
-                UserVoiceSession? session = await dbContext.VoiceSession.FindAsync(voiceSession.UserId);
-
-                if (session is null)
+                if (voiceSession.VoiceStarting.HasValue)
                 {
-                    if (voiceSession.VoiceStarting.HasValue)
-                    {
-                        await dbContext.VoiceSession.AddAsync(voiceSession);
-                        await dbContext.SaveChangesAsync();
-
-                        return new DefaultResponse()
-                        {
-                            IsSuccess = true,
-                            Message = "Добавлена новая запись по сессиям"
-                        };
-                    }
-                    else
-                    {
-                        return new DefaultResponse()
-                        {
-                            IsSuccess = false,
-                            Message = "Пользователь вышел из голосового во время перезапуска бота"
-                        };  
-                    }
-                }
-
-                if (session.VoiceStarting.HasValue && !voiceSession.VoiceStarting.HasValue)
-                {
-                    session.TotalSeconds += (long)(DateTime.UtcNow - session.VoiceStarting.Value).TotalSeconds;
-
-                    dbContext.Update(session);
+                    await dbContext.VoiceSession.AddAsync(voiceSession);
                     await dbContext.SaveChangesAsync();
 
                     return new DefaultResponse()
                     {
                         IsSuccess = true,
-                        Message = "Обновлена запись по сессиям"
+                        Message = "Добавлена новая запись по сессиям"
                     };
                 }
+                else
+                {
+                    return new DefaultResponse()
+                    {
+                        IsSuccess = false,
+                        Message = "Пользователь вышел из голосового во время перезапуска бота"
+                    };  
+                }
+            }
 
-                session.VoiceStarting = voiceSession.VoiceStarting;
+            if (session.VoiceStarting.HasValue && !voiceSession.VoiceStarting.HasValue)
+            {
+                session.TotalSeconds += (long)(DateTime.UtcNow - session.VoiceStarting.Value).TotalSeconds;
 
-                dbContext.VoiceSession.Update(session);
+                dbContext.Update(session);
                 await dbContext.SaveChangesAsync();
 
                 return new DefaultResponse()
@@ -65,28 +53,39 @@ namespace MlkAdmin._2_Application.Services.Users
                     Message = "Обновлена запись по сессиям"
                 };
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Ошибка при попытке добавить или обновить голосовую сессию пользователя");
 
-                return new DefaultResponse()
-                {
-                    IsSuccess = false,
-                    Message = ex.Message,
-                    Exception = ex
-                };
-            }
+            session.VoiceStarting = voiceSession.VoiceStarting;
+
+            dbContext.VoiceSession.Update(session);
+            await dbContext.SaveChangesAsync();
+
+            return new DefaultResponse()
+            {
+                IsSuccess = true,
+                Message = "Обновлена запись по сессиям"
+            };
         }
-        public async Task<long> GetVoiceSpendTimeAsync(ulong userId)
+        catch (Exception ex)
         {
-            UserVoiceSession? session = await dbContext.VoiceSession.FirstAsync(x => x.UserId == userId);
+            logger.LogError(ex, "Ошибка при попытке добавить или обновить голосовую сессию пользователя");
 
-            if (session == null)
+            return new DefaultResponse()
             {
-                return 0;
-            }
-
-            return session.TotalSeconds;
+                IsSuccess = false,
+                Message = ex.Message,
+                Exception = ex
+            };
         }
+    }
+    public async Task<long> GetVoiceSpendTimeAsync(ulong userId)
+    {
+        UserVoiceSession? session = await dbContext.VoiceSession.FirstAsync(x => x.UserId == userId);
+
+        if (session == null)
+        {
+            return 0;
+        }
+
+        return session.TotalSeconds;
     }
 }

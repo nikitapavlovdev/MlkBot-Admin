@@ -1,5 +1,4 @@
-﻿
-namespace MlkAdmin._2_Application.DTOs.Responses;
+﻿namespace MlkAdmin._2_Application.DTOs.Responses;
 
 public class AuResponse
 {
@@ -7,6 +6,4 @@ public class AuResponse
     public string Error { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty; 
     public bool IsSuccess { get; set; } = false;
-
 }
-

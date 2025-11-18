@@ -6,36 +6,35 @@ using Microsoft.Extensions.Logging;
 using MlkAdmin.Presentation.DiscordListeners;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MlkAdmin.Presentation.PresentationServices
+namespace MlkAdmin.Presentation.PresentationServices;
+
+public class DiscordBotHostService(
+    ILogger <DiscordBotHostService> logger,
+    IServiceProvider serviceProvider,
+    DiscordSocketClient discordClient,
+    JsonDiscordConfigurationProvider jsonDiscordConfigurationProvider) : IHostedService
 {
-    public class DiscordBotHostService(
-        ILogger <DiscordBotHostService> logger,
-        IServiceProvider serviceProvider,
-        DiscordSocketClient discordClient,
-        JsonDiscordConfigurationProvider jsonDiscordConfigurationProvider) : IHostedService
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        public async Task StartAsync(CancellationToken cancellationToken)
+        string? ApiKey = jsonDiscordConfigurationProvider.ApiKey;
+
+        if (string.IsNullOrWhiteSpace(ApiKey))
         {
-            string? ApiKey = jsonDiscordConfigurationProvider.ApiKey;
-
-            if (string.IsNullOrWhiteSpace(ApiKey))
-            {
-                logger.LogWarning("ApiKey is null");
-                return;
-            }
-
-            using var scope = serviceProvider.CreateScope();
-
-            DiscordEventsListener discordEventsController = scope.ServiceProvider.GetRequiredService<DiscordEventsListener>();
-            discordEventsController.SubscribeOnEvents(discordClient);
-
-            await discordClient.LoginAsync(TokenType.Bot, ApiKey);
-            await discordClient.StartAsync();
+            logger.LogWarning("ApiKey is null");
+            return;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            await discordClient.StopAsync();
-        }
+        using var scope = serviceProvider.CreateScope();
+
+        DiscordEventsListener discordEventsController = scope.ServiceProvider.GetRequiredService<DiscordEventsListener>();
+        discordEventsController.SubscribeOnEvents(discordClient);
+
+        await discordClient.LoginAsync(TokenType.Bot, ApiKey);
+        await discordClient.StartAsync();
+    }
+
+    public async Task StopAsync(CancellationToken cancellationToken)
+    {
+        await discordClient.StopAsync();
     }
 }

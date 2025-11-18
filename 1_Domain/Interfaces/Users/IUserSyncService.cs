@@ -1,7 +1,6 @@
-﻿namespace MlkAdmin._1_Domain.Interfaces.Users
+﻿namespace MlkAdmin._1_Domain.Interfaces.Users;
+
+public interface IUserSyncService
 {
-    public interface IUserSyncService
-    {
-        public Task SyncUsersAsync(ulong guildId);
-    }
+    public Task SyncUsersAsync(ulong guildId);
 }

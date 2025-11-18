@@ -4,29 +4,28 @@ using MlkAdmin._1_Domain.Interfaces.Messages;
 using MlkAdmin._2_Application.DTOs.Discord.Messages;
 using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 
-namespace MlkAdmin._2_Application.Events.UserLeft
+namespace MlkAdmin._2_Application.Events.UserLeft;
+
+class UserLeftHandler(
+    ILogger<UserLeftHandler> logger,
+    IModeratorLogsSender moderatorLogsSender,
+    JsonDiscordChannelsMapProvider jsonChannelsMapProvider) : INotificationHandler<UserLeft>
 {
-    class UserLeftHandler(
-        ILogger<UserLeftHandler> logger,
-        IModeratorLogsSender moderatorLogsSender,
-        JsonDiscordChannelsMapProvider jsonChannelsMapProvider) : INotificationHandler<UserLeft>
+    public async Task Handle(UserLeft notification, CancellationToken cancellationToken)
     {
-        public async Task Handle(UserLeft notification, CancellationToken cancellationToken)
+        try
         {
-            try
+            await moderatorLogsSender.SendLogMessageAsync(new LogMessageDto()
             {
-                await moderatorLogsSender.SendLogMessageAsync(new LogMessageDto()
-                {
-                    Description = $"> Пользователь {notification.SocketUser.Mention} покинул сервер",
-                    ChannelId = jsonChannelsMapProvider.LogsChannelId,
-                    Title = "Уход с сервера",
-                    UserId = notification.SocketGuild.Id
-                });
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
-            }
+                Description = $"> Пользователь {notification.SocketUser.Mention} покинул сервер",
+                ChannelId = jsonChannelsMapProvider.LogsChannelId,
+                Title = "Уход с сервера",
+                UserId = notification.SocketGuild.Id
+            });
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: {Message}\nStackTrace: {StackTrace}", ex.Message, ex.StackTrace);
         }
     }
 }
