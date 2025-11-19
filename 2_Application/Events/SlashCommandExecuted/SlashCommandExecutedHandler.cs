@@ -121,20 +121,21 @@ public class SlashCommandExecutedHandler(
 
 					break; 
 
-				default:
-					await notification.SocketSlashCommand.RespondAsync(
-					embed: embedMessageExtension.CreateEmbed(new EmbedDto()
-					{
-						Description = "Команда пока что в разработке",
-							Color = Discord.Color.Red
-						}),
-					ephemeral: true);
-					break;
+                    default:
+                        await notification.SocketSlashCommand.RespondAsync(
+							embed: embedMessageExtension.CreateEmbed(new EmbedDto()
+							{
+								Description = "Команда пока что в разработке",
+                                Color = Discord.Color.Red
+                            }),
+							ephemeral: true);
+                        break;
+				}
 			}
-		}
-		catch (Exception ex)
-		{
-			logger.LogError("Ошибка в классе SlashCommandExecutedHandler: {ex}", ex.Message);
-		}
+			catch (Exception ex)
+			{
+                logger.LogError("Ошибка в классе SlashCommandExecutedHandler: {ex}", ex.Message);
+			}
+        }
     }
 }
