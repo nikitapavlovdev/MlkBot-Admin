@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider
 {
-    public class JsonDiscordRolesProvider : IJsonConfigurationProvider
+    public class JsonDiscordRolesProvider : IJsonProvider
     {
         private readonly ILogger<JsonDiscordRolesProvider> logger;
         private readonly string filePath;

@@ -9,7 +9,7 @@ namespace MlkAdmin._2_Application.Services.Messages
 {
     public class LogsService(
         ILogger<LogsService> logger,
-        IChannelsService channelsService,
+        IGuildChannelsService channelsService,
         EmbedMessageExtension embedMessageExtension) : IModeratorLogsSender
     {
         public async Task SendLogMessageAsync(LogMessageDto logMessageDto)

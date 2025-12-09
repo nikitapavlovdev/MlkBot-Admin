@@ -26,6 +26,12 @@ csharp_style_prefer_utf8_string_literals = true:suggestion
 # CS8981: Имя типа содержит только строчные символы ASCII. Такие имена могут резервироваться для языка.
 dotnet_diagnostic.CS8981.severity = none
 
+# CA1873: Избегайте потенциально ресурсоемкого ведения журнала
+dotnet_diagnostic.CA1873.severity = none
+
+# CA2016: Перенаправьте параметр "CancellationToken" в методы
+dotnet_diagnostic.CA2016.severity = none
+
 [*.{cs,vb}]
 #### Стили именования ####
 

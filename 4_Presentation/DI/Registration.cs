@@ -86,9 +86,9 @@ public static class Registration
         services.AddScoped<IEmbedDtoCreator, EmbedManager>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserSyncService, UserSyncService>();
-        services.AddScoped<IVoiceChannelRepository, VoiceChannelRepository>();
+        services.AddScoped<IVoiceChannelRepository, VChannelRepository>();
         services.AddScoped<IRoleCenter, RolesService>();
-        services.AddScoped<IChannelsService, TextChannelsService>();
+        services.AddScoped<IGuildChannelsService, TextChannelsService>();
         services.AddScoped<IUserMessageRepository, UserMessageRepository>();
         services.AddScoped<IUserVoiceSessionRepository, UserVoiceSessionRepository>();
         services.AddScoped<VoiceChannelSyncServices>();

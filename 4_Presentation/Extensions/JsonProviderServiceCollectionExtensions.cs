@@ -6,7 +6,7 @@ namespace MlkAdmin._4_Presentation.Extensions
 {
     public static class JsonProviderServiceCollectionExtensions
     {
-        public static IServiceCollection AddJsonProvider<T>(this IServiceCollection services, string filePath) where T : class, IJsonConfigurationProvider
+        public static IServiceCollection AddJsonProvider<T>(this IServiceCollection services, string filePath) where T : class, IJsonProvider
         {
             services.AddSingleton<T>(x =>
             {

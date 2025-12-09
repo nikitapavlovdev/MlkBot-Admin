@@ -5,7 +5,7 @@ using MlkAdmin._1_Domain.Interfaces.Discord;
 
 namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider
 {
-    public class JsonDiscordCategoriesProvider : IJsonConfigurationProvider
+    public class JsonDiscordCategoriesProvider : IJsonProvider
     {
         private readonly ILogger<JsonDiscordCategoriesProvider> logger;
         private readonly string filePath;

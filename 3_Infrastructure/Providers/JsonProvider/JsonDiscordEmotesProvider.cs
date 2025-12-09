@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider
 {
-    public class JsonDiscordEmotesProvider : IJsonConfigurationProvider
+    public class JsonDiscordEmotesProvider : IJsonProvider
     {
         private readonly ILogger<JsonDiscordEmotesProvider> logger;
         private readonly string filePath;

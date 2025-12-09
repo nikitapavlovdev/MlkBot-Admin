@@ -5,7 +5,7 @@ using MlkAdmin._1_Domain.Interfaces.Discord;
 
 namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider
 {
-    public class JsonDiscordDynamicMessagesProvider : IJsonConfigurationProvider
+    public class JsonDiscordDynamicMessagesProvider : IJsonProvider
     {
 
         private readonly ILogger<JsonDiscordDynamicMessagesProvider> logger;

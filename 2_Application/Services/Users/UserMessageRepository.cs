@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using MlkAdmin._1_Domain.Entities;
 using MlkAdmin._1_Domain.Interfaces.Messages;
 using MlkAdmin._2_Application.DTOs.Discord.Responses;
 using MlkAdmin._3_Infrastructure.DataBase;

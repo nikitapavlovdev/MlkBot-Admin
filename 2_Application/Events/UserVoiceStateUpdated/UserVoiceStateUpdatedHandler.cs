@@ -41,7 +41,7 @@ namespace MlkAdmin._2_Application.Events.UserVoiceStateUpdated
                     {
                         RestVoiceChannel brandNewRestChannel = await voiceChannelsCreator.CreateVoiceChannelAsync(notification.NewState.VoiceChannel.Guild, notification.SocketUser);
 
-                        VoiceChannel dbChannel = new()
+                        GuildVoiceChannel dbChannel = new()
                         {
                             Category = notification.NewState.VoiceChannel.Category.ToString(),
                             Id = brandNewRestChannel.Id,
