@@ -5,7 +5,7 @@ namespace MlkAdmin._3_Infrastructure.JsonModels.Configuration
     public class RootDiscordConfiguration
     {
         [JsonProperty(nameof(MalenkieAdminBot))]
-        public MalenkieAdminBot? MalenkieAdminBot { get; set; }
+        public MalenkieAdminBot? MalenkieAdminBot { get; set; } 
 
         [JsonProperty(nameof(DevelopersData))]
         public DevelopersData? DevelopersData { get; set; }
@@ -17,16 +17,16 @@ namespace MlkAdmin._3_Infrastructure.JsonModels.Configuration
     public class MalenkieAdminBot
     {
         [JsonProperty(nameof(API_KEY))]
-        public string? API_KEY { get; set; }
+        public string API_KEY { get; set; } = string.Empty;
     }
 
     public class DevelopersData
     {
         [JsonProperty(nameof(Name))]
-        public string? Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonProperty(nameof(IconLink))]
-        public string? IconLink { get; set; }
+        public string IconLink { get; set; } = string.Empty;
     }
 
     public class Guild

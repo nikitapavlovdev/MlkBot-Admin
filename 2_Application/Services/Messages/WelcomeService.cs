@@ -9,7 +9,7 @@ namespace MlkAdmin._2_Application.Services.Messages
     public class WelcomeService(
         ILogger<WelcomeService> logger,
         EmbedMessageExtension embedMessageExtension,
-        JsonDiscordChannelsMapProvider jsonChannelsMapProvider)
+        JsonChannelsProvider jsonChannelsMapProvider)
     {
         public async Task SendWelcomeMessageAsync(SocketGuildUser socketGuildUser)
         {

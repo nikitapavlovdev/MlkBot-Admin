@@ -1,10 +1,9 @@
 ﻿using Discord.WebSocket;
 using MediatR;
 
-namespace MlkAdmin._2_Application.Events.ButtonExecuted
+namespace MlkAdmin._2_Application.Events.ButtonExecuted;
+
+public class ButtonExecuted(SocketMessageComponent socketMessageComponent) : INotification
 {
-    public class ButtonExecuted(SocketMessageComponent socketMessageComponent) : INotification
-    {
-        public SocketMessageComponent SocketMessageComponent { get; } = socketMessageComponent;
-    }
+    public SocketMessageComponent SocketMessageComponent { get; } = socketMessageComponent;
 }

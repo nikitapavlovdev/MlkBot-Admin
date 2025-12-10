@@ -1,29 +1,30 @@
-﻿using Discord.WebSocket;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using MlkAdmin._1_Domain.Interfaces.Providers;
 using MlkAdmin._2_Application.Managers.UserManagers;
-using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 
-namespace MlkAdmin._2_Application.Events.ReactionAdded
+namespace MlkAdmin._2_Application.Events.ReactionAdded;
+
+public class ReactionAddedHandler(
+    ILogger<ReactionAddedHandler> logger,
+    IJsonProvidersHub providersHub,
+    AutorizationManager autorizationManager) : INotificationHandler<ReactionAdded>
 {
-    public class ReactionAddedHandler(
-        ILogger<ReactionAddedHandler> logger,
-        JsonDiscordDynamicMessagesProvider jsonDiscordDynamicMessagesProvider,
-        AutorizationManager autorizationManager) : INotificationHandler<ReactionAdded>
+    public async Task Handle(ReactionAdded notification, CancellationToken cancellationToken)
     {
-        public async Task Handle(ReactionAdded notification, CancellationToken cancellationToken)
+        try
         {
-            try
-            {
-                if (notification.Message.Id == jsonDiscordDynamicMessagesProvider.AuMessageId)
-                {
-                    await autorizationManager.AuthorizeUser(notification.Reaction.User.Value);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("Error: {Message} StackTrace: {StackTrace}", ex.Message, ex.StackTrace);
-            }
+            if (notification.Message.Id == providersHub.DynamicMessage.AutorizationMessageId)
+                await autorizationManager.AuthorizeUser(notification.Reaction.User.Value);
+
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception, 
+                "Error: {Message} StackTrace: {StackTrace}",
+                exception.Message,
+                exception.StackTrace);
         }
     }
 }

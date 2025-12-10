@@ -12,7 +12,7 @@ namespace MlkAdmin.Presentation.PresentationServices
         ILogger <DiscordBotHostService> logger,
         IServiceProvider serviceProvider,
         DiscordSocketClient discordClient,
-        JsonDiscordConfigurationProvider jsonDiscordConfigurationProvider) : IHostedService
+        JsonDiscordConfigProvider jsonDiscordConfigurationProvider) : IHostedService
     {
         public async Task StartAsync(CancellationToken cancellationToken)
         {

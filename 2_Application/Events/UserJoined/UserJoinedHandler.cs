@@ -15,7 +15,7 @@ namespace MlkAdmin._2_Application.Events.UserJoined
         WelcomeService welcomeService,
         UsersCache usersCache,
         RolesManager rolesManager,
-        JsonDiscordChannelsMapProvider jsonChannelsMapProvider) : INotificationHandler<UserJoined>
+        JsonChannelsProvider jsonChannelsMapProvider) : INotificationHandler<UserJoined>
     {
         public async Task Handle(UserJoined notification, CancellationToken cancellationToken)
         {

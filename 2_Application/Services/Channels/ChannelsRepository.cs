@@ -13,8 +13,8 @@ public class ChannelsRepository(
     ILogger<ChannelsRepository> logger, 
     MlkAdminDbContext mlkAdminDbContext,
     DiscordSocketClient client, 
-    JsonDiscordCategoriesProvider jsonDiscordCategoriesProvider,
-    JsonDiscordChannelsMapProvider jsonDiscordChannelsMapProvider) : IGuildChannelsRepository
+    JsonCategoriesProvider jsonDiscordCategoriesProvider,
+    JsonChannelsProvider jsonDiscordChannelsMapProvider) : IGuildChannelsRepository
 {
     private async Task UpsertEntityAsync<TEntity>(
         TEntity entity, 

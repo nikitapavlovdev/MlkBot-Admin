@@ -12,9 +12,9 @@ namespace MlkAdmin._2_Application.Services.Channels;
 public class ChannelsService(
     ILogger<ChannelsService> logger, 
     DiscordSocketClient client,
-    JsonDiscordCategoriesProvider jsonDiscordCategoriesProvider,
+    JsonCategoriesProvider jsonDiscordCategoriesProvider,
     JsonDiscordRolesProvider jsonDiscordRolesProvider,
-    JsonDiscordChannelsMapProvider jsonDiscordChannelsMapProvider,
+    JsonChannelsProvider jsonDiscordChannelsMapProvider,
     ChannelsRepository channelsRepository) : IGuildChannelsService
 {
     private async Task<string> GetPersonalLobbyNameAsync(ulong userId)

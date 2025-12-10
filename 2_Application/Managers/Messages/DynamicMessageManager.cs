@@ -17,8 +17,8 @@ namespace MlkAdmin._2_Application.Managers.Messages
         IEmbedDtoCreator embedDtoCreator,
         EmbedMessageExtension embedMessageExtension,
         DiscordSocketClient client,
-        JsonDiscordChannelsMapProvider jsonChannelsMapProvider,
-        JsonDiscordDynamicMessagesProvider jsonDiscordDynamicMessagesProvider,
+        JsonChannelsProvider jsonChannelsMapProvider,
+        JsonDynamicMessagesProvider jsonDiscordDynamicMessagesProvider,
         ComponentsManager componentsManager) : IDynamicMessageCenter
     {
         public async Task UpdateAllDM(ulong guildId)

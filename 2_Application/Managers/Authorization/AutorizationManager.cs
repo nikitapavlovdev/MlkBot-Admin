@@ -13,7 +13,7 @@ public class AutorizationManager(
     IRoleCenter roleCenter,
     IModeratorLogsSender moderatorLogsSender,
     JsonDiscordRolesProvider jsonDiscordRolesProvider,
-    JsonDiscordChannelsMapProvider jsonChannelsMapProvider)
+    JsonChannelsProvider jsonChannelsMapProvider)
 {
     public async Task AuthorizeUser(IUser user)
     {

@@ -1,9 +1,8 @@
-﻿namespace MlkAdmin._2_Application.DTOs.Discord.Messages
+﻿namespace MlkAdmin._2_Application.DTOs.Discord.Messages;
+
+public class DynamicMessageDto
 {
-    public class DynamicMessageDto
-    {
-        public ulong MessageId { get; set; }
-        public ulong ChannelId { get; set; }
-        public ulong GuildId { get; set; }
-    }
+    public ulong MessageId { get; set; }
+    public ulong ChannelId { get; set; }
+    public ulong GuildId { get; set; }
 }

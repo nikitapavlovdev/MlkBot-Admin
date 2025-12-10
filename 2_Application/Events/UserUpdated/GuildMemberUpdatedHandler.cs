@@ -11,7 +11,7 @@ namespace MlkAdmin._2_Application.Events.UserUpdated
     public class GuildMemberUpdatedHandler(
         IModeratorLogsSender moderatorLogsSender,
         ILogger<GuildMemberUpdatedHandler> logger,
-        JsonDiscordChannelsMapProvider jsonDiscordChannelsMapProvider) : INotificationHandler<GuildMemberUpdated>
+        JsonChannelsProvider jsonDiscordChannelsMapProvider) : INotificationHandler<GuildMemberUpdated>
     {
         public async Task Handle(GuildMemberUpdated notification, CancellationToken cancellationToken)
         {

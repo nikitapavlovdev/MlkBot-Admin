@@ -132,7 +132,7 @@ namespace MlkAdmin._3_Infrastructure.Cache
         public string GetDescriptionForAutorization()
         {
             using var scope = serviceProvider.CreateScope();
-            JsonDiscordChannelsMapProvider jsonChannelsMapProvider = scope.ServiceProvider.GetRequiredService<JsonDiscordChannelsMapProvider>();
+            JsonChannelsProvider jsonChannelsMapProvider = scope.ServiceProvider.GetRequiredService<JsonChannelsProvider>();
 
             GuildEmote? pointEmote = emotesCache.GetEmote("grey_dot");
 

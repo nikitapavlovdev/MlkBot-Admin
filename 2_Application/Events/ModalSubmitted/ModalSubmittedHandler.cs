@@ -2,36 +2,39 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 
-namespace MlkAdmin._2_Application.Events.ModalSubmitted
+namespace MlkAdmin._2_Application.Events.ModalSubmitted;
+
+class ModalSubmittedHandler(
+    ILogger<ModalSubmittedHandler> logger) : INotificationHandler<ModalSubmitted>
 {
-    class ModalSubmittedHandler(
-        ILogger<ModalSubmittedHandler> logger) : INotificationHandler<ModalSubmitted>
+    public async Task Handle(ModalSubmitted notification, CancellationToken cancellationToken)
     {
-        public async Task Handle(ModalSubmitted notification, CancellationToken cancellationToken)
+        try
         {
-            try
+            await notification.Modal.DeferAsync();
+
+            if (notification.Modal.User is not SocketGuildUser socketGuildUser)
             {
-                await notification.Modal.DeferAsync();
-
-                if (notification.Modal.User is not SocketGuildUser socketGuildUser)
-                {
-                    return;
-                }
-
-                switch(notification.Modal.Data.CustomId)
-                {
-                    default:
-                        logger.LogInformation("Неизвестный CustomId: {CustomId}", notification.Modal.Data.CustomId);
-                        break;
-
-                }
-
-                await Task.CompletedTask;
+                return;
             }
-            catch (Exception ex) 
+
+            switch(notification.Modal.Data.CustomId)
             {
-                logger.LogError("Error: {Message} StackTrace: {StackTrace}", ex.Message, ex.StackTrace);
+                default:
+                    logger.LogInformation("Неизвестный CustomId: {CustomId}", notification.Modal.Data.CustomId);
+                    break;
+
             }
+
+            await Task.CompletedTask;
+        }
+        catch (Exception exception) 
+        {
+            logger.LogError(
+                exception, 
+                "Error: {Message} StackTrace: {StackTrace}", 
+                exception.Message, 
+                exception.StackTrace);
         }
     }
 }

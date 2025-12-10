@@ -8,7 +8,6 @@ using MlkAdmin._2_Application.Events.ButtonExecuted;
 using MlkAdmin._2_Application.Events.GuildAvailable;
 using MlkAdmin._2_Application.Events.SelectMenuExecuted;
 using MlkAdmin._2_Application.Events.UserVoiceStateUpdated;
-using MlkAdmin._2_Application.Events.Log;
 using MlkAdmin._2_Application.Events.Ready;
 using MlkAdmin._2_Application.Events.MessageReceived;
 using MlkAdmin._2_Application.Events.ReactionAdded;
@@ -25,7 +24,6 @@ namespace MlkAdmin.Presentation.DiscordListeners
     {
         public void SubscribeOnEvents(DiscordSocketClient client)
         {
-            client.Log += OnLog;
             client.UserJoined += OnUserJoined;
             client.UserLeft += OnUserLeft;
             client.ModalSubmitted += OnModalSubmitted;
@@ -139,21 +137,7 @@ namespace MlkAdmin.Presentation.DiscordListeners
 
             }
         }
-        private async Task OnLog(LogMessage logMessage)
-        {
-            try
-            {
-                using var scope = serviceScopeFactory.CreateScope();
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-                await mediator.Publish(new Log(logMessage));
-
-            }
-            catch (Exception ex)
-            {
-                logger.LogError("[OnLog] Error - {Message}", ex.Message);
-            }
-        }
+       
         private async Task OnSelectMenuExecuted(SocketMessageComponent socketMessageComponent)
         {
             try

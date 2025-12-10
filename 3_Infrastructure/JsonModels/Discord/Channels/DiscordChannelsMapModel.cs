@@ -170,7 +170,7 @@ namespace MlkAdmin._3_Infrastructure.JsonModels.Channels
         public ulong Id { get; set; }
 
         [JsonProperty(nameof(Https))]
-        public string? Https { get; set; }
+        public string Https { get; set; } = string.Empty;
 
         [JsonProperty(nameof(Description))]
         public string? Description { get; set; }

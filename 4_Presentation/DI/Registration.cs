@@ -125,13 +125,13 @@ public static class Registration
 
         services.AddSingleton(new DiscordSocketClient(new() { GatewayIntents = GatewayIntents.All}));
 
-        services.AddJsonProvider<JsonDiscordChannelsMapProvider>("../../../3_Infrastructure/Configuration/DiscordChannelsMap.json");
-        services.AddJsonProvider<JsonDiscordConfigurationProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
-        services.AddJsonProvider<JsonDiscordEmotesProvider>("../../../3_Infrastructure/Configuration/DiscordEmotes.json");
-        services.AddJsonProvider<JsonDiscordPicturesProvider>("../../../3_Infrastructure/Configuration/DiscordPictures.json");
+        services.AddJsonProvider<JsonChannelsProvider>("../../../3_Infrastructure/Configuration/DiscordChannelsMap.json");
+        services.AddJsonProvider<JsonDiscordConfigProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
+        services.AddJsonProvider<JsonEmotesProvider>("../../../3_Infrastructure/Configuration/DiscordEmotes.json");
+        services.AddJsonProvider<JsonPicturesProvider>("../../../3_Infrastructure/Configuration/DiscordPictures.json");
         services.AddJsonProvider<JsonDiscordRolesProvider>("../../../3_Infrastructure/Configuration/DiscordRoles.json");
-        services.AddJsonProvider<JsonDiscordCategoriesProvider>("../../../3_Infrastructure/Configuration/DiscordCategoriesMap.json");
-        services.AddJsonProvider<JsonDiscordDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/DiscordDynamicMessages.json");
+        services.AddJsonProvider<JsonCategoriesProvider>("../../../3_Infrastructure/Configuration/DiscordCategoriesMap.json");
+        services.AddJsonProvider<JsonDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/DiscordDynamicMessages.json");
         services.AddJsonProvider<JsonDiscordUsersLobbyProvider>("../../../3_Infrastructure/Configuration/DiscordUsersLobby.json");
         services.AddJsonProvider<JsonDiscordRolesListProvider>("../../../3_Infrastructure/Configuration/DiscordRolesList.json");
 

@@ -8,7 +8,7 @@ namespace MlkAdmin._2_Application.Managers.Discord
 {
     public class EmbedManager(
         EmbedDescriptionsCache embedDescriptionsCache,
-        JsonDiscordPicturesProvider jsonDiscordPicturesProvider) : IEmbedDtoCreator
+        JsonPicturesProvider jsonDiscordPicturesProvider) : IEmbedDtoCreator
     {
         public Task<EmbedDto> GetEmbedDto(DynamicMessageType type)
         {
