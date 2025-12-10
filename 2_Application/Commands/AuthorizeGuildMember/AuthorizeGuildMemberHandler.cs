@@ -5,9 +5,9 @@ using MlkAdmin._2_Application.Managers.UserManagers;
 
 namespace MlkAdmin._2_Application.Commands.Autorize;
 
-public class AutorizeCommandHandler(ILogger<AutorizeCommandHandler> logger, AutorizationManager auManager) : IRequestHandler<AutorizeCommand, AuResponse>
+public class AuthorizeGuildMemberHandler(ILogger<AuthorizeGuildMemberHandler> logger, AutorizationManager auManager) : IRequestHandler<AuthorizeGuildMember, AuResponse>
 {
-    public async Task<AuResponse> Handle(AutorizeCommand command, CancellationToken token)
+    public async Task<AuResponse> Handle(AuthorizeGuildMember command, CancellationToken token)
     {
 		try
 		{

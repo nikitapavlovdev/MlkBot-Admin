@@ -3,18 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Entities;
 using MlkAdmin._1_Domain.Interfaces.Channels;
+using MlkAdmin._1_Domain.Interfaces.Providers;
 using MlkAdmin._3_Infrastructure.DataBase;
-using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 using System.Linq.Expressions;
 
 namespace MlkAdmin._2_Application.Managers.Channels.VoiceChannels;
 
-public class ChannelsRepository(
-    ILogger<ChannelsRepository> logger, 
+public class GuildChannelsRepository(
+    ILogger<GuildChannelsRepository> logger, 
+    IJsonProvidersHub providersHub,
     MlkAdminDbContext mlkAdminDbContext,
-    DiscordSocketClient client, 
-    JsonCategoriesProvider jsonDiscordCategoriesProvider,
-    JsonChannelsProvider jsonDiscordChannelsMapProvider) : IGuildChannelsRepository
+    DiscordSocketClient client) : IGuildChannelsRepository
 {
     private async Task UpsertEntityAsync<TEntity>(
         TEntity entity, 
@@ -122,8 +121,8 @@ public class ChannelsRepository(
                     {
                         dbChannel.Name = vChannel.Name;
                         dbChannel.Category = vChannel.Category.Name;
-                        dbChannel.IsGen = vChannel.Id == jsonDiscordChannelsMapProvider.AutoGameLobbyId;
-                        dbChannel.IsTemp = vChannel.Id != jsonDiscordChannelsMapProvider.AutoGameLobbyId && vChannel.Category.Id == jsonDiscordCategoriesProvider.AutoLobbyCategoryId;
+                        dbChannel.IsGen = vChannel.Id == providersHub.Channels.GeneratingVoiceChannelId;
+                        dbChannel.IsTemp = vChannel.Id != providersHub.Channels.GeneratingVoiceChannelId && vChannel.Category.Id == providersHub.Categories.AutoCategoryId;
                     }
                 }
             }
@@ -146,8 +145,8 @@ public class ChannelsRepository(
                         DiscordId = vChannel.Id,
                         Category = vChannel.Category?.Name ?? string.Empty,
                         Name = vChannel.Name,
-                        IsGen = vChannel.Id == jsonDiscordChannelsMapProvider.AutoGameLobbyId,
-                        IsTemp = vChannel.Id != jsonDiscordChannelsMapProvider.AutoGameLobbyId && vChannel.Category?.Id == jsonDiscordCategoriesProvider.AutoLobbyCategoryId
+                        IsGen = vChannel.Id == providersHub.Channels.GeneratingVoiceChannelId,
+                        IsTemp = vChannel.Id != providersHub.Channels.GeneratingVoiceChannelId && vChannel.Category?.Id == providersHub.Categories.AutoCategoryId
                     });
                 }
             }

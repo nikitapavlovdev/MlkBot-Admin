@@ -4,18 +4,17 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Entities;
 using MlkAdmin._1_Domain.Interfaces.Channels;
+using MlkAdmin._1_Domain.Interfaces.Providers;
 using MlkAdmin._2_Application.Managers.Channels.VoiceChannels;
 using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 
 namespace MlkAdmin._2_Application.Services.Channels;
 
-public class ChannelsService(
-    ILogger<ChannelsService> logger, 
-    DiscordSocketClient client,
-    JsonCategoriesProvider jsonDiscordCategoriesProvider,
-    JsonDiscordRolesProvider jsonDiscordRolesProvider,
-    JsonChannelsProvider jsonDiscordChannelsMapProvider,
-    ChannelsRepository channelsRepository) : IGuildChannelsService
+public class GuildChannelsService(
+    ILogger<GuildChannelsService> logger,
+    IJsonProvidersHub providersHub,
+    IGuildChannelsRepository channelsRepository
+    DiscordSocketClient client) : IGuildChannelsService
 {
     private async Task<string> GetPersonalLobbyNameAsync(ulong userId)
     {
@@ -67,7 +66,7 @@ public class ChannelsService(
             name: $"🔉 | {await GetPersonalLobbyNameAsync(socketUser.Id)}",
             func: properties =>
             {
-                properties.CategoryId = jsonDiscordCategoriesProvider.AutoLobbyCategoryId;
+                properties.CategoryId = providersHub.Categories.AutoCategoryId;
                 properties.Bitrate = 64000;
                 properties.PermissionOverwrites = new Overwrite[]
                 {

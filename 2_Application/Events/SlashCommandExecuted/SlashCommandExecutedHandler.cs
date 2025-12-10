@@ -61,7 +61,7 @@ public class SlashCommandExecutedHandler(
                     }
 
                     var setLobbyResponse = await mediator.Send(
-                        new LobbyNameCommand()
+                        new PersonalVoiceChannelName()
                         {
                             LobbyName = lobbyName,
                             UserId = command.User.Id
@@ -115,7 +115,7 @@ public class SlashCommandExecutedHandler(
                     targetUserName = optionUser.GlobalName;
                 }
 
-                UserStatResponse userStatResponse = await mediator.Send(new UserStatCommand()
+                UserStatResponse userStatResponse = await mediator.Send(new GuildMemberStatistic()
                 {
                     UserId = targetUserId,
                 }, new());

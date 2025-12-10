@@ -35,6 +35,12 @@ public class GuildMember
     public string? RealName {  get; set; }
 
 
+
+    [MaxLength(20)]
+    [Column("personal_room_name")]
+    public string? PersonalRoomName { get; set; }
+
+
     [Column("joined_at", TypeName ="smalldatetime")]
     public DateTime JoinedAt { get; set; } = DateTime.MinValue;
 
