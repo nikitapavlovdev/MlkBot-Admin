@@ -2,9 +2,8 @@
 
 public abstract class BaseResponse(bool isSuccess, string message = "", string error = "")
 {
-    public bool IsSuccess { get; protected set; } = isSuccess;
-    public string Message { get; protected set; } = message;
-    public string Error { get; protected set; } = error;
+    public bool IsSuccess { get; set; } = isSuccess;
+    public string Message { get; set; } = message;
+    public string Error { get; set; } = error;
 
-    
 }

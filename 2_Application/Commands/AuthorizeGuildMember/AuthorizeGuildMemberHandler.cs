@@ -1,35 +1,44 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using MlkAdmin._2_Application.DTOs.Responses;
-using MlkAdmin._2_Application.Managers.UserManagers;
+using MlkAdmin._1_Domain.Managers;
+using MlkAdmin._2_Application.DTOs.Responses.Specialized;
 
 namespace MlkAdmin._2_Application.Commands.Autorize;
 
-public class AuthorizeGuildMemberHandler(ILogger<AuthorizeGuildMemberHandler> logger, AutorizationManager auManager) : IRequestHandler<AuthorizeGuildMember, AuResponse>
+public class AuthorizeGuildMemberHandler(
+	ILogger<AuthorizeGuildMemberHandler> logger,
+	IGuildMembersManager membersManager) : IRequestHandler<AuthorizeGuildMember, GuildMemberAuthorizationReponse>
 {
-    public async Task<AuResponse> Handle(AuthorizeGuildMember command, CancellationToken token)
+    public async Task<GuildMemberAuthorizationReponse> Handle(AuthorizeGuildMember request, CancellationToken token)
     {
 		try
 		{
-			await auManager.AuthorizeUser(command.User);
+			await membersManager.AuthorizeGuildMemberAsync(request.MemberId);
 
-			return new()
+			logger.LogInformation(
+				"Успешная авторизация пользователя {MemberId}",
+				request.MemberId);
+
+			return new GuildMemberAuthorizationReponse()
 			{
 				IsSuccess = true,
-				Status = "Успех",
-				Message = $"Пользователь {command.User.Mention} успешно авторизован на сервере"
+				Error = string.Empty,
+				Message = $"Успешная авторизация пользователя"
 			};
 
         }
-		catch (Exception ex)
+		catch (Exception exception)
 		{
-			logger.LogError(ex, "Ошибка при попытки авторизовать пользователя");
-			return new()
+			logger.LogError(
+				"Ошибка при попыткае авторизаовать пользователя {MemberId}. Ошибка: {Error}",
+				request.MemberId,
+				exception);
+
+			return new GuildMemberAuthorizationReponse()
 			{
+				Error = "INTERNAL_ERROR",
 				IsSuccess = false,
-				Error = ex.Message,
-				Status = "Ошибка",
-				Message = "Ошибка при попытке авторизовать пользователя"
+				Message = "Во время авторизации произошла непредвиденная ошибка"
 			};
 		}
     }

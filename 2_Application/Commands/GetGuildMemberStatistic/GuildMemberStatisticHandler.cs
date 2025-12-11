@@ -1,43 +1,42 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using MlkAdmin._2_Application.DTOs.Responses;
+using MlkAdmin._1_Domain.Interfaces.Mappers;
+using MlkAdmin._1_Domain.Interfaces.Services;
+using MlkAdmin._2_Application.DTOs.Responses.Abstraction;
+using MlkAdmin._2_Application.DTOs.Responses.Specialized;
 
 namespace MlkAdmin._2_Application.Commands.UserStat;
 
 public class GuildMemberStatisticHandler(
-    IUserVoiceSessionRepository userVoiceSessionRepository,
-    IUserMessageRepository userMessageRepository,
-    ILogger<GuildMemberStatisticHandler> logger) : IRequestHandler<GuildMemberStatistic, UserStatResponse>
+    ILogger<GuildMemberStatisticHandler> logger,
+    IGuildMemberService memberService,
+    IGuildMemberStatsMapper guildMemberStatsMapper) : IRequestHandler<GuildMemberStatistic, BaseResult<GuildMemberStatisticDto>>
 {
-    public async Task<UserStatResponse> Handle(GuildMemberStatistic command, CancellationToken cancellationToken)
+    public async Task<BaseResult<GuildMemberStatisticDto>> Handle(GuildMemberStatistic request, CancellationToken cancellationToken)
     {
         try
         {
-            int mesCount = await userMessageRepository.GetMessagesNumberAsync(command.UserId);
-            long totalSeconds = await userVoiceSessionRepository.GetVoiceSpendTimeAsync(command.UserId);
+            var memberStats = await memberService.GetGuildMemberStatisticsAsync(request.MemberId);
 
-            return new UserStatResponse
+            if(memberStats is null)
             {
-                IsSuccess = true,
-                Message = $"Статистика по пользователю {command.UserId}",
-                MessageCount = mesCount,
-                TotalSeconds = totalSeconds,
-                Status = "Успех"
-            };
+                logger.LogWarning(
+                    "null поле membersStats после попытки маппинга");
+
+                return BaseResult<GuildMemberStatisticDto>.Fail(new Error("101", "null поле membersStats после попытки маппинга", new Exception()));
+            }
+
+            return BaseResult<GuildMemberStatisticDto>.Success(await guildMemberStatsMapper.MapToDto(memberStats));
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-            logger.LogError(ex, "Ошибка при попытке получить статистику по пользователю");
+            logger.LogError(
+                exception, 
+                "Ошибка при попытке получить статистику по участнику {MemberId}",
+                request.MemberId);
 
-            return new UserStatResponse
-            {
-                Error = ex.Message,
-                Message = ex.Message,
-                IsSuccess = false,
-                MessageCount = -1,
-                Status = "Ошибка",
-                TotalSeconds = -1
-            };
+            return BaseResult<GuildMemberStatisticDto>.Fail(new Error("102", "Ошибка при попытке получить статистику по участнику {MemberId}", new Exception()));
+
         }
     }
 }
