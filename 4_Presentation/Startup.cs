@@ -1,8 +1,6 @@
 ﻿using Serilog;
 using Microsoft.Extensions.Hosting;
 using MlkAdmin.Presentation.DI;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MlkAdmin.Presentation;
 

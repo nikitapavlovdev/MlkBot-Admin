@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Interfaces.Providers;
 using MlkAdmin._2_Application.Commands.Autorize;
 using MlkAdmin._2_Application.Commands.LobbyName;
+using MlkAdmin._2_Application.Commands.PersonalVoiceChannelName;
 using MlkAdmin._2_Application.Commands.UserStat;
 using MlkAdmin._2_Application.DTOs.Discord.Embed;
 using MlkAdmin._2_Application.DTOs.Responses;
@@ -24,7 +25,7 @@ public class SlashCommandExecutedHandler(
         if (command.Channel.Id != providersHub.Channels.BotCommandsTextChannelId)
         {
             await notification.SocketSlashCommand.RespondAsync(
-                embed: embedMessageExtension.CreateEmbed(new EmbedDto()
+                embed: embedMessageExtension.CreateEmbed(new GuildMessageEmbedDto()
                 {
                     Description = $"Команды бота можно вызывать только в канале {providersHub.Channels.BotCommandsTextChannelLink}.",
                     Color = new(220, 20, 60)
@@ -61,17 +62,17 @@ public class SlashCommandExecutedHandler(
                     }
 
                     var setLobbyResponse = await mediator.Send(
-                        new PersonalVoiceChannelName()
+                        new PersonalVChannelName()
                         {
-                            LobbyName = lobbyName,
-                            UserId = command.User.Id
+                            MemberId = command.User.Id,
+                            PersonalRoomName = lobbyName,
                         },
                         token
                     );
 
                     await command.RespondAsync(
                         embed: embedMessageExtension.CreateEmbed(
-                            new EmbedDto()
+                            new GuildMessageEmbedDto()
                             {
                                 Description = setLobbyResponse.Message,
                                 Color = setLobbyResponse.IsSuccess ? Discord.Color.Green : Discord.Color.Red
@@ -120,7 +121,7 @@ public class SlashCommandExecutedHandler(
                     UserId = targetUserId,
                 }, new());
 
-                await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new EmbedDto()
+                await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new GuildMessageEmbedDto()
                 {
                     Description = $"Общая статистика {targetUserName}\n" +
                     $"> Сообщений отправлено: **{(userStatResponse.MessageCount == -1 ? "-" : userStatResponse.MessageCount)}**\n" +
@@ -137,20 +138,25 @@ public class SlashCommandExecutedHandler(
 
                 if (notification.SocketSlashCommand.User is SocketGuildUser user && !user.GuildPermissions.Administrator)
                 {
-                    await notification.SocketSlashCommand.RespondAsync(embed: embedMessageExtension.CreateEmbed(new()
-                    {
-                        Description = "Данную команду могут вызывать только администраторы сервера",
-                        Color = Discord.Color.Red
-                    }), ephemeral: true);
+                    await notification.SocketSlashCommand.RespondAsync(
+                        embed: embedMessageExtension.CreateEmbed(
+                            new()
+                            {
+                                Description = "Данную команду могут вызывать только администраторы сервера",
+                                Color = Discord.Color.Red
+                            }), 
+
+                        ephemeral: true);
 
                     return;
                 }
 
-                AuResponse response = await mediator.Send(
-                    new AutorizeCommand()
+                var response = await mediator.Send(
+                    new AuthorizeGuildMember()
                     {
-                        User = notification.SocketSlashCommand.Data.Options.FirstOrDefault(x => x.Name == "user").Value as SocketGuildUser
+                        MemberId = command.User.Id
                     }, 
+                    
                     new()
                 );
 
@@ -167,7 +173,7 @@ public class SlashCommandExecutedHandler(
 
             default:
                 await notification.SocketSlashCommand.RespondAsync(
-                    embed: embedMessageExtension.CreateEmbed(new EmbedDto()
+                    embed: embedMessageExtension.CreateEmbed(new GuildMessageEmbedDto()
                     {
                         Description = "Команда пока что в разработке",
                         Color = Discord.Color.Red

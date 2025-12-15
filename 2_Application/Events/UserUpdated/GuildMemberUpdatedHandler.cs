@@ -28,7 +28,7 @@ namespace MlkAdmin._2_Application.Events.UserUpdated
                     return;
                 }
 
-                await moderatorLogsSender.SendLogMessageAsync(new LogMessageDto
+                await moderatorLogsSender.SendLogMessageAsync(new GuildAdminLogMessageDto
                 {
                     ChannelId = jsonDiscordChannelsMapProvider.LogsChannelId,
                     Title = $"Изменение участника {notification.OldUserState.Value.GlobalName ?? "-"}",

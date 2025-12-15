@@ -2,14 +2,15 @@
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Interfaces.Mappers;
 using MlkAdmin._1_Domain.Interfaces.Services;
-using MlkAdmin._2_Application.DTOs.Responses.Abstraction;
-using MlkAdmin._2_Application.DTOs.Responses.Specialized;
+using MlkAdmin._1_Domain.Enums;
+using MlkAdmin.Shared.Results;
+using MlkAdmin.Shared.DTOs.GuildMessages;
 
 namespace MlkAdmin._2_Application.Commands.UserStat;
 
 public class GuildMemberStatisticHandler(
     ILogger<GuildMemberStatisticHandler> logger,
-    IGuildMemberService memberService,
+    IGuildMembersService memberService,
     IGuildMemberStatsMapper guildMemberStatsMapper) : IRequestHandler<GuildMemberStatistic, BaseResult<GuildMemberStatisticDto>>
 {
     public async Task<BaseResult<GuildMemberStatisticDto>> Handle(GuildMemberStatistic request, CancellationToken cancellationToken)
@@ -23,10 +24,15 @@ public class GuildMemberStatisticHandler(
                 logger.LogWarning(
                     "null поле membersStats после попытки маппинга");
 
-                return BaseResult<GuildMemberStatisticDto>.Fail(new Error("101", "null поле membersStats после попытки маппинга", new Exception()));
+                return BaseResult<GuildMemberStatisticDto>.Fail(
+                    new Error(
+                        ErrorCodeEnums.VARIABLE_IS_NULL, 
+                        "null поле membersStats после попытки маппинга")
+                    );
             }
 
-            return BaseResult<GuildMemberStatisticDto>.Success(await guildMemberStatsMapper.MapToDto(memberStats));
+            return BaseResult<GuildMemberStatisticDto>.Success(
+                await guildMemberStatsMapper.MapToDto(memberStats));
         }
         catch (Exception exception)
         {
@@ -35,8 +41,11 @@ public class GuildMemberStatisticHandler(
                 "Ошибка при попытке получить статистику по участнику {MemberId}",
                 request.MemberId);
 
-            return BaseResult<GuildMemberStatisticDto>.Fail(new Error("102", "Ошибка при попытке получить статистику по участнику {MemberId}", new Exception()));
-
+            return BaseResult<GuildMemberStatisticDto>.Fail(
+                new Error(
+                    ErrorCodeEnums.ENTERNAL_ERROR, 
+                    $"Ошибка при попытке получить статистику по участнику {request.MemberId}")
+                );
         }
     }
 }

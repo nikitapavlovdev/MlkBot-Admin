@@ -27,7 +27,7 @@ namespace MlkAdmin._2_Application.Events.UserJoined
                 await welcomeService.SendWelcomeMessageAsync(notification.SocketGuildUser);
                 await usersCache.AddUserAsync(notification.SocketGuildUser);
 
-                await moderatorLogsSender.SendLogMessageAsync(new LogMessageDto
+                await moderatorLogsSender.SendLogMessageAsync(new GuildAdminLogMessageDto
                 {
                     Description = $"> Пользователь {notification.SocketGuildUser.Mention} присоединился к серверу",
                     Title = "Новый пользователь",

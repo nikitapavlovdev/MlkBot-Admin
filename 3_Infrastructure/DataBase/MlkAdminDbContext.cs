@@ -10,4 +10,5 @@ public class MlkAdminDbContext(DbContextOptions<MlkAdminDbContext> options) : Db
     public DbSet<GuildTextChannel> TChannels { get; set; }
     public DbSet<GuildMessage> GuildMessages { get; set; }
     public DbSet<GuildVoiceSession> GuildVoiceSessions { get; set; }
+
 }

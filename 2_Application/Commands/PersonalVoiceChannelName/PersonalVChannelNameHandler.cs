@@ -8,7 +8,7 @@ namespace MlkAdmin._2_Application.Commands.LobbyName;
 
 public class PersonalVChannelNameHandler(
     ILogger<PersonalVChannelNameHandler> logger,
-    IGuildMemberService memberService) : IRequestHandler<PersonalVChannelName, PersonalVChannelNameResponse>
+    IGuildMembersService memberService) : IRequestHandler<PersonalVChannelName, PersonalVChannelNameResponse>
 {
     public async Task<PersonalVChannelNameResponse> Handle(PersonalVChannelName request, CancellationToken token)
     {

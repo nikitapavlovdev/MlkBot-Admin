@@ -1,0 +1,165 @@
+﻿{
+  "GuildRoles": [
+    {
+      "Id": 1384942889867546746,
+      "Key": "GuildLeader",
+      "Name": "De Founder🧸",
+      "Description": "Основатель сервера.",
+      "Type": "Server"
+    },
+    {
+      "Id": 1384944025978802226,
+      "Key": "GuildAdmin",
+      "Name": "Admin🧥",
+      "Description": "Модератор сервера.",
+      "Type": "Server"
+    },
+    {
+      "Id": 1386320053187776515,
+      "Key": "GuildBooster",
+      "Name": "Local Legend 💟",
+      "Description": "Легенда **Server Booster**.",
+      "Type": "Server"
+    },
+    {
+      "Id": 1384946913798914098,
+      "Key": "NotAuthorized",
+      "Name": "Not Authorized",
+      "Description": "Неавторизованный пользователь.",
+      "Type": "Server"
+    },
+    {
+      "Id": 1384942315323523154,
+      "Key": "GuildMember",
+      "Name": "Malenkiy Member⚡",
+      "Description": "Основная роль сервера.",
+      "Type": "Server"
+    },
+    {
+      "id": 1385981946412138577,
+      "Key": "Foreigner",
+      "Name": "International 💞",
+      "Description": "Друзья из других стран.",
+      "Type": "Unique"
+    },
+    {
+      "Id": 1384949107407196240,
+      "Key": "DeadInside",
+      "Name": "Dead Inside💣",
+      "Description": "Немного депрессивный кид.",
+      "Type": "Unique"
+    },
+    {
+      "Id": 1384949504624562297,
+      "Key": "Goose",
+      "Name": "The Gus'🦆",
+      "Description": "Немного гусь в душе.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "Amnyamchik",
+      "Name": "Amnyamchik  Squad💅",
+      "Id": 1384946149215178802,
+      "Description": "Легендарный отряд амнямчиков.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "Gacha",
+      "Name": "Gacha Slayer 🎰",
+      "Id": 1385982298515836928,
+      "Description": "Мин-максер гачи-слеер.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "Streamer",
+      "Name": "Twitch Creator 📟",
+      "Id": 1384948467377377430,
+      "Description": "Twitch-стример.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "LadyFlora",
+      "Name": "Lady Flora 🌼",
+      "Id": 1384948879367344258,
+      "Description": "Прошаренный за лор цветов.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "BlackBeer",
+      "Name": "Black Beer 🍺",
+      "Id": 1384946335354060870,
+      "Description": "Немного черный и пивас в душе.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "Svin",
+      "Name": "Svinopatka 🐽",
+      "Id": 1384948388323131443,
+      "Description": "Свинота в голосовом канале.",
+      "Type": "Unique"
+    },
+    {
+      "Key": "IT",
+      "Name": "Information Hunter💻",
+      "Id": 1385982746664370277,
+      "Description": "It-шник программер.",
+      "Type": "Category"
+    },
+    {
+      "Key": "Institute",
+      "Name": "IKIT 👨‍🎓",
+      "Id": 1385982871575204020,
+      "Description": "Студент СФУ ИКИТ.",
+      "Type": "Category"
+    },
+    {
+      "Key": "PlayersClub",
+      "Name": "Players Club 🎲",
+      "Id": 1384942505564311563,
+      "Description": "Основная игровая роль сервера.",
+      "Type": "Category"
+    },
+    {
+      "Key": "CrimsonColor",
+      "Name": "💖",
+      "Id": 1385983424837324800,
+      "Description": "",
+      "Type": "Color"
+    },
+    {
+      "Key": "SlateblueColor",
+      "Name": "💙",
+      "Id": 1385983742597926912,
+      "Description": "",
+      "Type": "Color"
+    },
+    {
+      "Key": "LimeColor",
+      "Name": "💚",
+      "Id": 1385983846218072104,
+      "Description": "",
+      "Type": "Color"
+    },
+    {
+      "Key": "CoralColor",
+      "Name": "mlk.coral",
+      "Id": 1385984375841357996,
+      "Description": "",
+      "Type": "Color"
+    },
+    {
+      "Key": "KhakiColor",
+      "Name": "mlk.khaki",
+      "Id": 1385984491482386563,
+      "Description": "",
+      "Type": "Color"
+    },
+    {
+      "Key": "VioletColor",
+      "Name": "mlk.violet",
+      "Id": 1385984602816123001,
+      "Description": "",
+      "Type": "Color"
+    }
+  ]
+}

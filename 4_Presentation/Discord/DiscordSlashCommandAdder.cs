@@ -7,7 +7,7 @@ namespace MlkAdmin._4_Presentation.Discord;
 public class DiscordSlashCommandAdder(
     ILogger<DiscordSlashCommandAdder> logger, 
     DiscordSocketClient client,
-    JsonDiscordConfigProvider jsonDiscordConfigurationProvider)
+    JsonConfigProvider jsonDiscordConfigurationProvider)
 {
     private List<SlashCommandProperties?> SlashGuildCommands { get; set; } = [];
 

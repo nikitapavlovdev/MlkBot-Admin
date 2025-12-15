@@ -2,18 +2,22 @@
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Managers;
 using MlkAdmin._2_Application.DTOs.Responses.Specialized;
+using MlkAdmin._3_Infrastructure.Interfaces;
 
 namespace MlkAdmin._2_Application.Commands.Autorize;
 
 public class AuthorizeGuildMemberHandler(
 	ILogger<AuthorizeGuildMemberHandler> logger,
-	IGuildMembersManager membersManager) : IRequestHandler<AuthorizeGuildMember, GuildMemberAuthorizationReponse>
+	IGuildMembersManager membersManager,
+	IDiscordExtensionsService discordExtensionsService) : IRequestHandler<AuthorizeGuildMember, GuildMemberAuthorizationReponse>
 {
     public async Task<GuildMemberAuthorizationReponse> Handle(AuthorizeGuildMember request, CancellationToken token)
     {
 		try
 		{
-			await membersManager.AuthorizeGuildMemberAsync(request.MemberId);
+			await membersManager.AuthorizeGuildMemberAsync(
+				request.MemberId, 
+				await discordExtensionsService.GetGuildMemberMentionByIdAsync(request.MemberId));
 
 			logger.LogInformation(
 				"Успешная авторизация пользователя {MemberId}",

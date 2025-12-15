@@ -1,5 +1,5 @@
-﻿using MlkAdmin._1_Domain.Models;
-using MlkAdmin._2_Application.DTOs.Responses.Specialized;
+﻿using MlkAdmin.Shared.DTOs.GuildData;
+using MlkAdmin.Shared.DTOs.GuildMessages;
 
 namespace MlkAdmin._1_Domain.Interfaces.Mappers;
 

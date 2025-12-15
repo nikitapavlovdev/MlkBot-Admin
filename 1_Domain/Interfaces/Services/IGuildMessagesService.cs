@@ -1,7 +1,9 @@
-﻿namespace MlkAdmin._1_Domain.Interfaces.Messages
+﻿using MlkAdmin.Shared.DTOs.GuildMessages;
+
+namespace MlkAdmin._1_Domain.Interfaces.Messages;
+
+public interface IGuildMessagesService
 {
-    public interface IGuildMessagesService
-    {
-        Task UpdateAllDM(ulong guildId);
-    }
+    Task SendMessageInChannelAsync(ulong channelId, GuildMessageDto content);
+    Task UpdateAllDynamicMessagesAsync();
 }

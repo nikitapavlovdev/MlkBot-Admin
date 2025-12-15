@@ -15,7 +15,7 @@ namespace MlkAdmin._2_Application.Events.UserLeft
         {
             try
             {
-                await moderatorLogsSender.SendLogMessageAsync(new LogMessageDto()
+                await moderatorLogsSender.SendLogMessageAsync(new GuildAdminLogMessageDto()
                 {
                     Description = $"> Пользователь {notification.SocketUser.Mention} покинул сервер",
                     ChannelId = jsonChannelsMapProvider.LogsChannelId,

@@ -6,22 +6,16 @@ using Discord.Commands;
 using MlkAdmin.Presentation.PresentationServices;
 using MlkAdmin.Presentation.DiscordListeners;
 using MlkAdmin.Infrastructure.Cache;
-using MlkAdmin._1_Domain.Interfaces.Messages;
-using MlkAdmin._1_Domain.Interfaces.Discord;
-using MlkAdmin._1_Domain.Interfaces.Users;
 using MlkAdmin._2_Application.Services.Messages;
-using MlkAdmin._2_Application.Managers.Channels.VoiceChannelsManagers;
 using MlkAdmin._2_Application.Managers.RolesManagers;
 using MlkAdmin._2_Application.Managers.UserManagers;
 using MlkAdmin._2_Application.Events.ButtonExecuted;
 using MlkAdmin._2_Application.Events.GuildAvailable;
 using MlkAdmin._2_Application.Managers.Messages;
-using MlkAdmin._2_Application.Events.Log;
 using MlkAdmin._2_Application.Events.MessageReceived;
 using MlkAdmin._2_Application.Events.ModalSubmitted;
 using MlkAdmin._2_Application.Events.ReactionAdded;
 using MlkAdmin._2_Application.Events.Ready;
-using MlkAdmin._2_Application.Managers.Channels.VoiceChannels;
 using MlkAdmin._2_Application.Events.SelectMenuExecuted;
 using MlkAdmin._2_Application.Events.UserJoined;
 using MlkAdmin._2_Application.Events.UserLeft;
@@ -36,14 +30,11 @@ using MlkAdmin._3_Infrastructure.Cache;
 using MlkAdmin._3_Infrastructure.DataBase;
 using MlkAdmin._4_Presentation.Extensions;
 using MlkAdmin._4_Presentation.Discord;
-using MlkAdmin._1_Domain.Interfaces.Roles;
 using MlkAdmin._2_Application.Services.Roles;
 using MlkAdmin._3_Infrastructure.Cache.Channels;
 using MlkAdmin._1_Domain.Interfaces.Channels;
-using MlkAdmin._2_Application.Services.Channels;
 using MlkAdmin._2_Application.Services.Users;
 using MlkAdmin._3_Infrastructure.Cache.Users;
-using MlkAdmin._2_Application.Managers.Users.Stat;
 
 namespace MlkAdmin.Presentation.DI;
 
@@ -55,7 +46,6 @@ public static class Registration
             typeof(Startup).Assembly,
             typeof(UserJoinedHandler).Assembly,
             typeof(UserLeftHandler).Assembly,
-            typeof(LogHandler).Assembly,
             typeof(ModalSubmittedHandler).Assembly,
             typeof(ButtonExecutedHandler).Assembly,
             typeof(GuildAvailableHandler).Assembly,
@@ -81,7 +71,7 @@ public static class Registration
     }
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<IModeratorLogsSender, LogsService>();
+        services.AddScoped<IModeratorLogsSender, GuildMessageService>();
         services.AddScoped<IDynamicMessageCenter, DynamicMessageManager>();
         services.AddScoped<IEmbedDtoCreator, EmbedManager>();
         services.AddScoped<IUserRepository, UserRepository>();
@@ -126,10 +116,10 @@ public static class Registration
         services.AddSingleton(new DiscordSocketClient(new() { GatewayIntents = GatewayIntents.All}));
 
         services.AddJsonProvider<JsonChannelsProvider>("../../../3_Infrastructure/Configuration/DiscordChannelsMap.json");
-        services.AddJsonProvider<JsonDiscordConfigProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
+        services.AddJsonProvider<JsonConfigProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
         services.AddJsonProvider<JsonEmotesProvider>("../../../3_Infrastructure/Configuration/DiscordEmotes.json");
         services.AddJsonProvider<JsonPicturesProvider>("../../../3_Infrastructure/Configuration/DiscordPictures.json");
-        services.AddJsonProvider<JsonDiscordRolesProvider>("../../../3_Infrastructure/Configuration/DiscordRoles.json");
+        services.AddJsonProvider<JsonRolesProvider>("../../../3_Infrastructure/Configuration/DiscordRoles.json");
         services.AddJsonProvider<JsonCategoriesProvider>("../../../3_Infrastructure/Configuration/DiscordCategoriesMap.json");
         services.AddJsonProvider<JsonDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/DiscordDynamicMessages.json");
         services.AddJsonProvider<JsonDiscordUsersLobbyProvider>("../../../3_Infrastructure/Configuration/DiscordUsersLobby.json");

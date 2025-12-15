@@ -1,22 +1,21 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Interfaces.Providers;
-using MlkAdmin._2_Application.Managers.UserManagers;
+using MlkAdmin._1_Domain.Managers;
 
 namespace MlkAdmin._2_Application.Events.ReactionAdded;
 
 public class ReactionAddedHandler(
     ILogger<ReactionAddedHandler> logger,
     IJsonProvidersHub providersHub,
-    AutorizationManager autorizationManager) : INotificationHandler<ReactionAdded>
+    IGuildMembersManager membersManager) : INotificationHandler<ReactionAdded>
 {
     public async Task Handle(ReactionAdded notification, CancellationToken cancellationToken)
     {
         try
         {
             if (notification.Message.Id == providersHub.DynamicMessage.AutorizationMessageId)
-                await autorizationManager.AuthorizeUser(notification.Reaction.User.Value);
-
+                await membersManager.AuthorizeGuildMemberAsync(notification.Reaction.User.Value.Id, notification.Reaction.User.Value.Mention);
         }
         catch (Exception exception)
         {
