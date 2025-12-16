@@ -14,5 +14,5 @@ public class GuildMessageEmbedDto
     public GuildMessageEmbedFooterDto? FooterDto { get; set; }
     public GuildMessageEmbedAuthorDto? AuthorDto { get; set; }
 
-    public IEnumerable<EmbedFieldBuilder>? EmbedFields { get; set; } 
+    public IReadOnlyCollection<EmbedFieldBuilder>? EmbedFields { get; set; } 
 }

@@ -1,27 +1,16 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using MlkAdmin._1_Domain.Interfaces.Messages;
-using MlkAdmin._2_Application.DTOs.Discord.Messages;
-using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 
 namespace MlkAdmin._2_Application.Events.UserLeft
 {
     class UserLeftHandler(
-        ILogger<UserLeftHandler> logger,
-        IModeratorLogsSender moderatorLogsSender,
-        JsonChannelsProvider jsonChannelsMapProvider) : INotificationHandler<UserLeft>
+        ILogger<UserLeftHandler> logger) : INotificationHandler<UserLeft>
     {
         public async Task Handle(UserLeft notification, CancellationToken cancellationToken)
         {
             try
             {
-                await moderatorLogsSender.SendLogMessageAsync(new GuildAdminLogMessageDto()
-                {
-                    Description = $"> Пользователь {notification.SocketUser.Mention} покинул сервер",
-                    ChannelId = jsonChannelsMapProvider.LogsChannelId,
-                    Title = "Уход с сервера",
-                    UserId = notification.SocketGuild.Id
-                });
+                
             }
             catch (Exception ex)
             {

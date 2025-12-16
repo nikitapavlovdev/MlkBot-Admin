@@ -1,45 +1,32 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using MlkAdmin._2_Application.Managers.RolesManagers;
-using MlkAdmin._2_Application.DTOs.Discord.Messages;
-using MlkAdmin._1_Domain.Interfaces.Messages;
-using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
-using MlkAdmin._3_Infrastructure.Cache.Users;
-using MlkAdmin._2_Application.Services.Messages;
+using MlkAdmin._1_Domain.Managers;
 
-namespace MlkAdmin._2_Application.Events.UserJoined
+namespace MlkAdmin._2_Application.Events.UserJoined;
+
+class UserJoinedHandler(
+    ILogger<UserJoinedHandler> logger, 
+    IGuildMembersManager membersManager) : INotificationHandler<UserJoined>
 {
-    class UserJoinedHandler(
-        ILogger<UserJoinedHandler> logger,
-        IModeratorLogsSender moderatorLogsSender,
-        WelcomeService welcomeService,
-        UsersCache usersCache,
-        RolesManager rolesManager,
-        JsonChannelsProvider jsonChannelsMapProvider) : INotificationHandler<UserJoined>
+    public async Task Handle(UserJoined notification, CancellationToken cancellationToken)
     {
-        public async Task Handle(UserJoined notification, CancellationToken cancellationToken)
+        try
         {
-            try
+            if (notification.SocketGuildUser.IsBot)
             {
-                if (notification.SocketGuildUser.IsBot) { return; }
+                logger.LogInformation(
+                    "Участник {MemberName} является ботом",
+                    notification.SocketGuildUser.GlobalName);
 
-                await rolesManager.AddNotRegisteredRoleAsync(notification.SocketGuildUser);
-                await welcomeService.SendWelcomeMessageAsync(notification.SocketGuildUser);
-                await usersCache.AddUserAsync(notification.SocketGuildUser);
-
-                await moderatorLogsSender.SendLogMessageAsync(new GuildAdminLogMessageDto
-                {
-                    Description = $"> Пользователь {notification.SocketGuildUser.Mention} присоединился к серверу",
-                    Title = "Новый пользователь",
-                    ChannelId = jsonChannelsMapProvider.LogsChannelId,
-                    UserId = notification.SocketGuildUser.Id
-
-                });
+                return;
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Ошибка при работе события UserJoinedHandler");
-            }
+
+            await membersManager.AuthorizeGuildMemberAsync(notification.SocketGuildUser.Id, notification.SocketGuildUser.Mention);
+
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Ошибка при работе события UserJoinedHandler");
         }
     }
 }

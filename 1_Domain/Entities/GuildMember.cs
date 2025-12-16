@@ -42,7 +42,7 @@ public class GuildMember
 
 
     [Column("joined_at", TypeName ="smalldatetime")]
-    public DateTime JoinedAt { get; set; } = DateTime.MinValue;
+    public DateTimeOffset? JoinedAt { get; set; } 
 
 
     [Column("birthday", TypeName ="smalldatetime")]

@@ -1,34 +1,33 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Managers;
-using MlkAdmin._2_Application.DTOs.Responses.Specialized;
+using MlkAdmin._1_Domain.Enums;
 using MlkAdmin._3_Infrastructure.Interfaces;
+using MlkAdmin.Shared.Results;
 
 namespace MlkAdmin._2_Application.Commands.Autorize;
 
 public class AuthorizeGuildMemberHandler(
 	ILogger<AuthorizeGuildMemberHandler> logger,
 	IGuildMembersManager membersManager,
-	IDiscordExtensionsService discordExtensionsService) : IRequestHandler<AuthorizeGuildMember, GuildMemberAuthorizationReponse>
+	IDiscordService discordService) : IRequestHandler<AuthorizeGuildMember, BaseResult>
 {
-    public async Task<GuildMemberAuthorizationReponse> Handle(AuthorizeGuildMember request, CancellationToken token)
+    public async Task<BaseResult> Handle(AuthorizeGuildMember request, CancellationToken token)
     {
 		try
 		{
-			await membersManager.AuthorizeGuildMemberAsync(
-				request.MemberId, 
-				await discordExtensionsService.GetGuildMemberMentionByIdAsync(request.MemberId));
+			var memberMention = await discordService.GetGuildMemberMentionByIdAsync(request.MemberId);
+
+            await membersManager.AuthorizeGuildMemberAsync(
+				request.MemberId,
+                memberMention);
 
 			logger.LogInformation(
 				"Успешная авторизация пользователя {MemberId}",
 				request.MemberId);
 
-			return new GuildMemberAuthorizationReponse()
-			{
-				IsSuccess = true,
-				Error = string.Empty,
-				Message = $"Успешная авторизация пользователя"
-			};
+			return BaseResult.Success(
+				$"Пользователь {memberMention} успешно авторизован");
 
         }
 		catch (Exception exception)
@@ -38,12 +37,11 @@ public class AuthorizeGuildMemberHandler(
 				request.MemberId,
 				exception);
 
-			return new GuildMemberAuthorizationReponse()
-			{
-				Error = "INTERNAL_ERROR",
-				IsSuccess = false,
-				Message = "Во время авторизации произошла непредвиденная ошибка"
-			};
+			return BaseResult.Fail(
+				$"Непредвиденная ошибка при попытке авторизации пользователя с Id {request.MemberId}", 
+				new(
+					ErrorCodes.ENTERNAL_ERROR, 
+					exception.Message));
 		}
     }
 }

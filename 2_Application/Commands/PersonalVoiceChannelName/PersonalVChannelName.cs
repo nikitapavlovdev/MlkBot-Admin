@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using MlkAdmin._2_Application.DTOs.Responses.Specialized;
+using MlkAdmin.Shared.Results;
 
 namespace MlkAdmin._2_Application.Commands.PersonalVoiceChannelName;
 
-public class PersonalVChannelName : IRequest<PersonalVChannelNameResponse>
+public class PersonalVChannelName : IRequest<BaseResult>
 {
     public ulong MemberId { get; set; }
     public string PersonalRoomName { get; set; } = string.Empty;

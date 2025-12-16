@@ -22,4 +22,4 @@ public readonly struct BaseResult(bool isSuccess, string messageToClient, Error?
     public static BaseResult Fail(string messageToClient, Error error) => new(false, messageToClient, error);
 }
 
-public record Error(ErrorCodeEnums ErrorCode, string Details);
+public record Error(ErrorCodes ErrorCode, string Details);

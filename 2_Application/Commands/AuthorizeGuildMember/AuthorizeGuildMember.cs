@@ -1,10 +1,9 @@
 ﻿using MediatR;
-using MlkAdmin._2_Application.DTOs.Responses.Abstraction;
-using MlkAdmin._2_Application.DTOs.Responses.Specialized;
+using MlkAdmin.Shared.Results;
 
 namespace MlkAdmin._2_Application.Commands.Autorize;
 
-public class AuthorizeGuildMember : IRequest<GuildMemberAuthorizationReponse>
+public class AuthorizeGuildMember : IRequest<BaseResult>
 {
     public ulong MemberId { get; set; }
 }
