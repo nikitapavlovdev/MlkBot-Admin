@@ -1,28 +1,22 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
-using MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 using Microsoft.Extensions.Logging;
 using MlkAdmin.Presentation.DiscordListeners;
 using Microsoft.Extensions.DependencyInjection;
+using MlkAdmin._1_Domain.Interfaces.Providers;
 
 namespace MlkAdmin.Presentation.PresentationServices
 {
     public class DiscordBotHostService(
         ILogger <DiscordBotHostService> logger,
         IServiceProvider serviceProvider,
-        DiscordSocketClient discordClient,
-        JsonConfigProvider jsonDiscordConfigurationProvider) : IHostedService
+        IJsonProvidersHub providersHub,
+        DiscordSocketClient discordClient) : IHostedService
     {
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            string? ApiKey = jsonDiscordConfigurationProvider.ApiKey;
-
-            if (string.IsNullOrWhiteSpace(ApiKey))
-            {
-                logger.LogWarning("ApiKey is null");
-                return;
-            }
+            string? ApiKey = providersHub.DiscordConfig.MalenkieApiKey;
 
             using var scope = serviceProvider.CreateScope();
 

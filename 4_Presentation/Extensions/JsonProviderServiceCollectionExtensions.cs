@@ -6,14 +6,23 @@ namespace MlkAdmin._4_Presentation.Extensions
 {
     public static class JsonProviderServiceCollectionExtensions
     {
-        public static IServiceCollection AddJsonProvider<T>(this IServiceCollection services, string filePath) where T : class, IJsonProvider
+
+        public static IServiceCollection AddJsonProvider<TInterface, TImplementation>(
+            this IServiceCollection services,
+            string filePath)
+            where TImplementation  : class, TInterface, IJsonProvider
+            where TInterface : class
         {
-            services.AddSingleton<T>(x =>
+            services.AddScoped<TInterface>(serviceProvider =>
             {
                 string fullPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, filePath));
-                ILogger<T> logger = x.GetRequiredService<ILogger<T>>();
 
-                return (T)Activator.CreateInstance(typeof(T), fullPath, logger)!;
+                if (!File.Exists(fullPath))
+                    throw new FileNotFoundException($"Файл не найден: {fullPath}");
+
+                var logger = serviceProvider.GetRequiredService<ILogger<TImplementation>>();
+
+                return (TInterface)Activator.CreateInstance(typeof(TImplementation), fullPath, logger)!;
             });
 
             return services;

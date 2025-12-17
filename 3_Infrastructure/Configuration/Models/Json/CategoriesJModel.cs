@@ -10,11 +10,11 @@ public class RootDiscordCategories
 
 public class Guild
 {
-    [JsonProperty(nameof(Server))]
-    public Server? Server { get; set; }
-
     [JsonProperty(nameof(Administration))]
     public Administration? Administration { get; set; }
+    
+    [JsonProperty(nameof(Server))]
+    public Server? Server { get; set; }
 
     [JsonProperty(nameof(General))]
     public General? General { get; set; }

@@ -10,7 +10,7 @@ namespace MlkAdmin._2_Application.Services.Messages;
 public class GuildMessageService(
     ILogger<GuildMessageService> logger,
     IGuildChannelsService channelsService,
-	IEmbedService embedService) : IGuildMessagesService
+	IDiscordEmbedBuilder embedBuilder) : IGuildMessagesService
 {
     public async Task SendMessageInChannelAsync(ulong channelId, GuildMessageDto content)
     {
@@ -21,7 +21,7 @@ public class GuildMessageService(
 			if (!result.IsSuccess)
 			{
 				logger.LogWarning(
-					"Произошла ошибка при попытке получить канал. Код ошибки: {ErrorCode}", result.Error.Code);
+					"Произошла ошибка при попытке получить канал. Код ошибки: {ErrorCode}", result.Error.Details);
 
 				return;
 			}
@@ -36,16 +36,15 @@ public class GuildMessageService(
                 return;
             }
 
-
-			await textChannel.SendMessageAsync(
-				embed: await embedService.BuildEmbedAsync(
+			var embed = (await embedBuilder.BuildEmbedAsync(
 					new()
 					{
 						Title = content.Title,
 						Description = content.Description
-					}
-				)
-			);
+					})).Value;
+
+
+            await textChannel.SendMessageAsync(embed: embed);
 			
         }
 		catch (Exception exception)

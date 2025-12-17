@@ -31,5 +31,13 @@ public abstract class JsonProviderBase<T>(string path, ILogger logger) : IJsonPr
 		}
     }
 
-	protected T GetConfig() => _config ?? throw new InvalidOperationException("Конфигурация не загружена");
+	protected T GetConfig()
+	{
+		if (_config == null)
+		{
+			Load();
+		}
+
+		return _config ?? throw new InvalidOperationException("Конфигурация не загружена");
+	}
 }

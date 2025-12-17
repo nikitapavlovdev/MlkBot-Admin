@@ -5,7 +5,7 @@ using MlkAdmin._3_Infrastructure.Providers.JsonProvider.Abstraction;
 
 namespace MlkAdmin._3_Infrastructure.Providers.JsonProvider;
 
-public class JsonConfigProvider(string path, ILogger<JsonConfigProvider> logger) : JsonProviderBase<RootDiscordConfiguration>(path, logger), IJsonDiscordConfigProvider
+public class JsonDiscordConfigProvider(string path, ILogger<JsonDiscordConfigProvider> logger) : JsonProviderBase<RootDiscordConfiguration>(path, logger), IJsonDiscordConfigProvider
 {
     public string MalenkieApiKey => GetConfig().MalenkieAdminBot.API_KEY;
     public string DeveloperName => GetConfig().DevelopersData.Name;

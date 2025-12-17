@@ -223,4 +223,44 @@ public class GuildMembersRepository(
                     $"{exception.Message}"));
         }
     }
+
+    public async Task<BaseResult> UpdatePersonalRoomNameAsync(ulong memberId, string roomName, CancellationToken token)
+    {
+        try
+        {
+            var member = await mlkAdminDbContext.GuildMembers.FirstOrDefaultAsync(x => x.DiscordId == memberId);
+            
+            if(member is null)
+            {
+                logger.LogInformation(
+                    "Участник с Id {MemberId} не найден в базе данных",
+                    memberId);
+
+                return BaseResult.Fail("Ваши данные как участника сервера не найдены в базе данных. Обратитесь к никитке",
+                    new(
+                        ErrorCodes.ENTERNAL_ERROR, 
+                        "В методе UpdatePersonalRoomNameAsync поле member пришло пустым"));
+            }
+
+            member.PersonalRoomName  = roomName;
+
+            await mlkAdminDbContext.SaveChangesAsync();
+
+            return BaseResult.Success(
+                $"Имя личной комнаты успешно обновлено на {roomName}");
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Ошибка про попытке обновить имя личной комнаты\nСообщение: {ErrorMessage}",
+                exception.Message);
+
+            return BaseResult.Fail(
+                "Упс, возникла ошибка :(",
+                new(
+                    ErrorCodes.ENTERNAL_ERROR,
+                    exception.Message));
+        }
+    }
 }

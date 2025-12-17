@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MlkAdmin._1_Domain.Interfaces.Channels;
 using MlkAdmin._1_Domain.Interfaces.Discord;
 using MlkAdmin._1_Domain.Interfaces.Messages;
+using MlkAdmin._1_Domain.Interfaces.Providers;
+using MlkAdmin._1_Domain.Interfaces.Providers.Json.Specialized;
 using MlkAdmin._1_Domain.Interfaces.Roles;
 using MlkAdmin._1_Domain.Interfaces.Services;
 using MlkAdmin._1_Domain.Interfaces.Users;
@@ -29,6 +31,7 @@ using MlkAdmin._2_Application.Managers.Messages;
 using MlkAdmin._2_Application.Managers.Users;
 using MlkAdmin._2_Application.Services.Channels;
 using MlkAdmin._2_Application.Services.Messages;
+using MlkAdmin._3_Infrastructure.Configuration.Providers.Jsons.Realization;
 using MlkAdmin._3_Infrastructure.DataBase;
 using MlkAdmin._3_Infrastructure.Implementations.Builders;
 using MlkAdmin._3_Infrastructure.Implementations.Services;
@@ -71,6 +74,14 @@ public static class Registration
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<IDiscordService, DiscordService>();
+        services.AddScoped<IJsonProvidersHub, JsonProvidersHub>();
+        services.AddJsonProvider<IJsonCategoriesProvider, JsonCategoriesProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildCategories.json");
+        services.AddJsonProvider<IJsonChannelsProvider, JsonChannelsProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildChannels.json");
+        services.AddJsonProvider<IJsonDiscordConfigProvider, JsonDiscordConfigProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildConfiguration.json");
+        services.AddJsonProvider<IJsonDynamicMessageProvider, JsonDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildDynamicMessages.json");
+        services.AddJsonProvider<IJsonEmotesProvider, JsonEmotesProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildEmotes.json");
+        services.AddJsonProvider<IJsonPicturesProvider, JsonPicturesProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildPictures.json");
+        services.AddJsonProvider<IJsonRolesProvider, JsonRolesProvider>("../../../3_Infrastructure/Configuration/Data/Jsons/GuildRoles.json");
 
         services.AddDbContext<MlkAdminDbContext>(options =>
         {
@@ -103,18 +114,10 @@ public static class Registration
         services.AddHostedService<DiscordBotHostService>();
 
         services.AddScoped<DiscordEventsListener>();
-        services.AddScoped<CommandService>();
         services.AddScoped<DiscordSlashCommandAdder>();
+        services.AddScoped<CommandService>();
 
         services.AddSingleton(new DiscordSocketClient(new() { GatewayIntents = GatewayIntents.All}));
-
-        services.AddJsonProvider<JsonChannelsProvider>("../../../3_Infrastructure/Configuration/DiscordChannelsMap.json");
-        services.AddJsonProvider<JsonConfigProvider>("../../../3_Infrastructure/Configuration/DiscordConfiguration.json");
-        services.AddJsonProvider<JsonEmotesProvider>("../../../3_Infrastructure/Configuration/DiscordEmotes.json");
-        services.AddJsonProvider<JsonPicturesProvider>("../../../3_Infrastructure/Configuration/DiscordPictures.json");
-        services.AddJsonProvider<JsonRolesProvider>("../../../3_Infrastructure/Configuration/DiscordRoles.json");
-        services.AddJsonProvider<JsonCategoriesProvider>("../../../3_Infrastructure/Configuration/DiscordCategoriesMap.json");
-        services.AddJsonProvider<JsonDynamicMessagesProvider>("../../../3_Infrastructure/Configuration/DiscordDynamicMessages.json");
 
         return services;
     }
