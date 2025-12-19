@@ -1,15 +1,15 @@
 ﻿using Discord;
 using Discord.Rest;
 using Discord.WebSocket;
+using MlkAdmin.Shared.Results;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Interfaces.Channels;
 using MlkAdmin._1_Domain.Interfaces.Providers;
-using MlkAdmin._1_Domain.Interfaces.Users;
 using MlkAdmin._1_Domain.Enums;
-using MlkAdmin.Shared.Results;
+using MlkAdmin._1_Domain.Interfaces;
 using MlkAdmin._3_Infrastructure.Interfaces;
 
-namespace MlkAdmin._2_Application.Services.Channels;
+namespace MlkAdmin._2_Application.Implementations.Services;
 
 public class GuildChannelsService(
     ILogger<GuildChannelsService> logger,

@@ -2,7 +2,6 @@
 
 public class GuildMessageDto
 {
-    public ulong MemberId { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string Message { get; set; } = string.Empty;
+    public GuildMessageEmbedDto? Embed { get; set; } 
 }

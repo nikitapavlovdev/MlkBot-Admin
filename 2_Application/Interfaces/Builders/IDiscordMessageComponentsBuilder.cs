@@ -2,7 +2,7 @@
 using MlkAdmin.Shared.DTOs.DiscordComponents;
 using MlkAdmin.Shared.Results;
 
-namespace MlkAdmin._2_Application.Interfaces;
+namespace MlkAdmin._2_Application.Interfaces.Builders;
 
 public interface IDiscordMessageComponentsBuilder
 {

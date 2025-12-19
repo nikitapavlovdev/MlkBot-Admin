@@ -14,7 +14,7 @@ public class ReactionAddedHandler(
     {
         try
         {
-            if (notification.Message.Id == providersHub.DynamicMessage.AutorizationMessageId)
+            if (notification.Message.Id == providersHub.DynamicMessage.AuthorizationMessageId)
                 await membersManager.AuthorizeGuildMemberAsync(notification.Reaction.User.Value.Id, notification.Reaction.User.Value.Mention);
         }
         catch (Exception exception)

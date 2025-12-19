@@ -31,3 +31,8 @@ public enum ComponentType
     SELECTION_MENU
 }
 
+public enum SelectionMenuCustomIds
+{
+    GUILD_NAMECOLOR_CHANGE
+}
+

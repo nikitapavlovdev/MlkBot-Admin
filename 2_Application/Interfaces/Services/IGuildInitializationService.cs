@@ -1,4 +1,4 @@
-﻿namespace MlkAdmin._1_Domain.Interfaces.Services;
+﻿namespace MlkAdmin._2_Application.Interfaces.Services;
 
 public interface IGuildInitializationService
 {

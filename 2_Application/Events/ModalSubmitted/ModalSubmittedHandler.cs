@@ -15,13 +15,19 @@ class ModalSubmittedHandler(
 
             if (notification.Modal.User is not SocketGuildUser socketGuildUser)
             {
+                logger.LogWarning(
+                    "Пользователь, отправивший модальное окно, не является участником сервера");
+
                 return;
             }
 
             switch(notification.Modal.Data.CustomId)
             {
                 default:
-                    logger.LogInformation("Неизвестный CustomId: {CustomId}", notification.Modal.Data.CustomId);
+                    logger.LogInformation(
+                        "Неизвестный CustomId: {CustomId}", 
+                        notification.Modal.Data.CustomId);
+
                     break;
 
             }
@@ -35,6 +41,8 @@ class ModalSubmittedHandler(
                 "Error: {Message} StackTrace: {StackTrace}", 
                 exception.Message, 
                 exception.StackTrace);
+
+            return;
         }
     }
 }

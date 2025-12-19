@@ -39,12 +39,14 @@ public class DynamicMessageManager(
             var response = await channelsService.GetGuildChannelAsync(DynamicMessageDto.ChannelId);
             var channel = response.Value as SocketTextChannel;
 
+            var embed = (await embedBuilder.BuildEmbedAsync(embedDto)).Value;
+
             if (await channel.GetMessageAsync(DynamicMessageDto.MessageId) is IUserMessage sentMessage)
             {
                 await sentMessage.ModifyAsync(
                     async message =>
                     {
-                        message.Embed = (await embedBuilder.BuildEmbedAsync(embedDto)).Value;
+                        message.Embed = embed;
                         message.Components = messageComponent;
                     }
                 );
@@ -52,7 +54,7 @@ public class DynamicMessageManager(
             else
             {
                 await channel.SendMessageAsync(
-                    embed: (await embedBuilder.BuildEmbedAsync(embedDto)).Value, 
+                    embed: embed, 
                     components: messageComponent);
             } 
         }
@@ -72,7 +74,7 @@ public class DynamicMessageManager(
         var dmDto = new GuildDynamicMessageDto()
         {
             ChannelId = providersHub.Channels.HubTextChannelId,
-            MessageId = providersHub.DynamicMessage.AutorizationMessageId
+            MessageId = providersHub.DynamicMessage. AuthorizationMessageId
         };
 
         var embedDto = new GuildMessageEmbedDto()
@@ -126,19 +128,19 @@ public class DynamicMessageManager(
         };
 
         var component = (await componentsBuilder.BuildSelectionMenuAsync(
-                new()
-                {
-                    Placeholder = "жʍяᴋни",
-                    CustomId = "choice_color_name",
-                    Options = {
-                        new() { Label = "💜", Value = "VioletColor"},
-                        new() { Label = "💙", Value = "SlateblueColor"},
-                        new() { Label = "🧡", Value = "CoralColor"},
-                        new() { Label = "💛", Value = "KhakiColor"},
-                        new() { Label = "💖", Value = "CrimsonColor"},
-                        new() { Label = "💚", Value = "LimeColor"},
-                        new() { Label = "ʀᴇᴍᴏᴠᴇ ᴄᴏʟᴏʀ", Value = "remove_color"} }
-                })).Value;
+            new()
+            {
+                Placeholder = "жʍяᴋни",
+                CustomId = "GUILD_NAMECOLOR_CHANGE",
+                Options = {
+                    new() { Label = "💜", Value = "VioletColor"},
+                    new() { Label = "💙", Value = "SlateblueColor"},
+                    new() { Label = "🧡", Value = "CoralColor"},
+                    new() { Label = "💛", Value = "KhakiColor"},
+                    new() { Label = "💖", Value = "CrimsonColor"},
+                    new() { Label = "💚", Value = "LimeColor"},
+                    new() { Label = "ʀᴇᴍᴏᴠᴇ ᴄᴏʟᴏʀ", Value = "remove_color"} }
+            })).Value;
 
         await SendOrUpdateAsync(dmDto, embedDto, component);
     }

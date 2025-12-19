@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using MlkAdmin._1_Domain.Interfaces.Messages;
+using MlkAdmin._1_Domain.Interfaces;
 
 namespace MlkAdmin._2_Application.Events.MessageReceived;
 

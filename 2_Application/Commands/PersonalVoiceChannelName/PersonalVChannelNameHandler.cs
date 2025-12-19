@@ -1,11 +1,10 @@
 ﻿using MediatR;
 using MlkAdmin.Shared.Results;
 using Microsoft.Extensions.Logging;
-using MlkAdmin._1_Domain.Interfaces.Users;
+using MlkAdmin._1_Domain.Interfaces;
 using MlkAdmin._1_Domain.Enums;
-using MlkAdmin._2_Application.Commands.PersonalVoiceChannelName;
 
-namespace MlkAdmin._2_Application.Commands.LobbyName;
+namespace MlkAdmin._2_Application.Commands.PersonalVoiceChannelName;
 
 public class PersonalVChannelNameHandler(
     ILogger<PersonalVChannelNameHandler> logger,

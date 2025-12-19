@@ -5,7 +5,7 @@ using MlkAdmin._1_Domain.Managers;
 namespace MlkAdmin._2_Application.Events.UserJoined;
 
 class UserJoinedHandler(
-    ILogger<UserJoinedHandler> logger, 
+    ILogger<UserJoinedHandler> logger,
     IGuildMembersManager membersManager) : INotificationHandler<UserJoined>
 {
     public async Task Handle(UserJoined notification, CancellationToken cancellationToken)
@@ -21,7 +21,7 @@ class UserJoinedHandler(
                 return;
             }
 
-            await membersManager.AuthorizeGuildMemberAsync(notification.SocketGuildUser.Id, notification.SocketGuildUser.Mention);
+            await membersManager.SendWelcomeMessageAsync(notification.SocketGuildUser.Id);
 
         }
         catch (Exception ex)

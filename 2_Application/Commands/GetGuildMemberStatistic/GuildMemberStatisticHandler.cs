@@ -2,7 +2,7 @@
 using MlkAdmin.Shared.Results;
 using MlkAdmin.Shared.DTOs.GuildMessages;
 
-namespace MlkAdmin._2_Application.Commands.UserStat;
+namespace MlkAdmin._2_Application.Commands.GetGuildMemberStatistic;
 
 public class GuildMemberStatisticHandler : IRequestHandler<GuildMemberStatistic, BaseResult<GuildMemberStatisticDto>>
 {

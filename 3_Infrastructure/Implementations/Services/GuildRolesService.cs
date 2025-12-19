@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Enums;
 using MlkAdmin._1_Domain.Interfaces.Roles;
 using MlkAdmin._3_Infrastructure.Interfaces;
@@ -193,5 +194,40 @@ public class GuildRolesService(
                     ErrorCodes.ROLE_REMOVAL_FAILED,
                     $"Детали ошибки: {exception.Message}"));
         }
+    }
+
+    public async Task<BaseResult> RemoveRolesByFilterModeAsync(ulong memberId, IReadOnlyCollection<ulong> rolesIds, bool isMatching)
+    {
+        var guildMember = (await discordService.GetGuildMemberAsync(memberId)).Value;
+        var guildMemberRoles = guildMember.Roles;
+
+        var toRemove = isMatching 
+            ? [.. guildMemberRoles.Where(x => rolesIds.Contains(x.Id))] 
+            : guildMemberRoles.Where(x => !rolesIds.Contains(x.Id)).ToList();
+
+        if (toRemove.Count == 0)
+        {
+            logger.LogInformation(
+                "У пользователя {memberId} нет ролей, IDs которых содержатся в переданной коллекции\n" +
+                "Роли пользователя: {guildMemberRoles}\n" +
+                "Роли в переданной коллекции: {rolesIds}",
+                memberId,
+                string.Join(":", guildMemberRoles.Select(x => x.Id).ToList()),
+                string.Join(":", rolesIds));
+
+            return BaseResult.Fail("Не получилось удалить роли, потому что у участника их и так нет",
+                new(
+                    ErrorCodes.ROLE_REMOVAL_FAILED,
+                    ""));
+        }
+
+        await guildMember.RemoveRolesAsync(toRemove);
+
+        logger.LogInformation(
+            "Роли {toRemove} успешно удалены у пользователя {memberId}",
+            string.Join(":", toRemove),
+            memberId);
+
+        return BaseResult.Success("Роли участника успешно удалены!");
     }
 }

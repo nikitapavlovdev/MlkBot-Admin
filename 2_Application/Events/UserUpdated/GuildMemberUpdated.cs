@@ -2,11 +2,10 @@
 using Discord.WebSocket;
 using MediatR;
 
-namespace MlkAdmin._2_Application.Events.UserUpdated
+namespace MlkAdmin._2_Application.Events.UserUpdated;
+
+public class GuildMemberUpdated(Cacheable<SocketGuildUser, ulong> oldUserState, SocketGuildUser newUserState) : INotification
 {
-    public class GuildMemberUpdated(Cacheable<SocketGuildUser, ulong> oldUserState, SocketGuildUser newUserState) : INotification
-    {
-        public Cacheable<SocketGuildUser, ulong> OldUserState { get; } = oldUserState;
-        public SocketGuildUser NewUserState { get; } = newUserState;
-    }
+    public Cacheable<SocketGuildUser, ulong> OldUserState { get; } = oldUserState;
+    public SocketGuildUser NewUserState { get; } = newUserState;
 }

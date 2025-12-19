@@ -5,7 +5,7 @@ using MlkAdmin._1_Domain.Enums;
 using MlkAdmin._3_Infrastructure.Interfaces;
 using MlkAdmin.Shared.Results;
 
-namespace MlkAdmin._2_Application.Commands.Autorize;
+namespace MlkAdmin._2_Application.Commands.AuthorizeGuildMember;
 
 public class AuthorizeGuildMemberHandler(
 	ILogger<AuthorizeGuildMemberHandler> logger,

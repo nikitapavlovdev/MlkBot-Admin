@@ -1,6 +1,6 @@
 ﻿using MlkAdmin._1_Domain.Entities;
 
-namespace MlkAdmin._1_Domain.Interfaces.Channels;
+namespace MlkAdmin._1_Domain.Interfaces;
 
 public interface IGuildChannelsRepository
 {

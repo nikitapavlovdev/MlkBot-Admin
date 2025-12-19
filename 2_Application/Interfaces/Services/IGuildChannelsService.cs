@@ -2,7 +2,7 @@
 using Discord.WebSocket;
 using MlkAdmin.Shared.Results;
 
-namespace MlkAdmin._1_Domain.Interfaces.Channels;
+namespace MlkAdmin._2_Application.Interfaces.Services;
 
 public interface IGuildChannelsService
 {

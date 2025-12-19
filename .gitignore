@@ -399,7 +399,3 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /3_Infrastructure/Configuration/Jsons
-/mlkadmin.db
-/mlkadmin.dn
-/mlkadmin.db-shm
-/mlkadmin.db-wal

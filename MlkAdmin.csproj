@@ -8,6 +8,7 @@
 	<Description>Admin Bot for Malenkie Guild</Description>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="MediatR" Version="14.0.0" />
     <PackageReference Include="Discord.Net" Version="3.18.0" />

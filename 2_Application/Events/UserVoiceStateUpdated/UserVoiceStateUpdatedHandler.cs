@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using MlkAdmin._1_Domain.Entities;
+using MlkAdmin._1_Domain.Interfaces;
 using MlkAdmin._1_Domain.Interfaces.Channels;
 
 namespace MlkAdmin._2_Application.Events.UserVoiceStateUpdated;

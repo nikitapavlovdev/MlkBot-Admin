@@ -1,6 +1,6 @@
 ﻿using MlkAdmin.Shared.DTOs.GuildMessages;
 
-namespace MlkAdmin._1_Domain.Interfaces.Messages;
+namespace MlkAdmin._2_Application.Interfaces.Services;
 
 public interface IGuildMessagesService
 {

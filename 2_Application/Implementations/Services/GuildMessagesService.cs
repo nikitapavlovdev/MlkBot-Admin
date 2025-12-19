@@ -5,10 +5,10 @@ using MlkAdmin._1_Domain.Interfaces.Discord;
 using MlkAdmin._1_Domain.Interfaces.Messages;
 using MlkAdmin.Shared.DTOs.GuildMessages;
 
-namespace MlkAdmin._2_Application.Services.Messages;
+namespace MlkAdmin._2_Application.Implementations.Services;
 
-public class GuildMessageService(
-    ILogger<GuildMessageService> logger,
+public class GuildMessagesService(
+    ILogger<GuildMessagesService> logger,
     IGuildChannelsService channelsService,
 	IDiscordEmbedBuilder embedBuilder) : IGuildMessagesService
 {
@@ -37,11 +37,11 @@ public class GuildMessageService(
             }
 
 			var embed = (await embedBuilder.BuildEmbedAsync(
-					new()
-					{
-						Title = content.Title,
-						Description = content.Description
-					})).Value;
+				new()
+				{
+					Title = content.Title,
+					Description = content.Description
+				})).Value;
 
 
             await textChannel.SendMessageAsync(embed: embed);

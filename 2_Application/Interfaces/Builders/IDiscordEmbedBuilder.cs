@@ -2,7 +2,7 @@
 using MlkAdmin.Shared.DTOs.GuildMessages;
 using MlkAdmin.Shared.Results;
 
-namespace MlkAdmin._1_Domain.Interfaces.Discord;
+namespace MlkAdmin._2_Application.Interfaces.Builders;
 
 public interface IDiscordEmbedBuilder
 {

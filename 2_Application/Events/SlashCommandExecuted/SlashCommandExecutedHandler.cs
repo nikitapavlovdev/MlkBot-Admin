@@ -1,12 +1,9 @@
-﻿using Discord.WebSocket;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using MlkAdmin.Shared.DTOs.GuildMessages;
 using MlkAdmin._1_Domain.Interfaces.Discord;
 using MlkAdmin._1_Domain.Interfaces.Providers;
-using MlkAdmin._2_Application.Commands.Autorize;
 using MlkAdmin._2_Application.Commands.PersonalVoiceChannelName;
-using MlkAdmin._2_Application.Commands.UserStat;
 
 namespace MlkAdmin._2_Application.Events.SlashCommandExecuted;
 
@@ -41,6 +38,7 @@ public class SlashCommandExecutedHandler(
                 try
                 {
                     var personalRoomName = command.Data.Options.FirstOrDefault(x => x.Name.Equals("name", StringComparison.Ordinal)).Value.ToString() ?? "👀";
+
                     var result = await mediator.Send(
                         new PersonalVChannelName()
                         {
@@ -49,6 +47,7 @@ public class SlashCommandExecutedHandler(
                         },
                         token
                     );
+
                     var embed = (await embedBuilder.BuildEmbedAsync(
                         new GuildMessageEmbedDto()
                         {
